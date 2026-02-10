@@ -1,10 +1,11 @@
-import Home from '@/pages/Home'
+import Router from '@/route/router'
 import { Fragment } from 'react'
 
 function App() {
     return (
         <Fragment>
-            <Home />
+            {/* <Router /> */}
+            <h1>Home</h1>
         </Fragment>
     )
 }
