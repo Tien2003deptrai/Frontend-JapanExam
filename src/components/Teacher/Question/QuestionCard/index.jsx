@@ -1,10 +1,11 @@
 import { cn } from '@/lib/utils'
 
-export default function CourseCard({ className, children, data, ...props }) {
+export default function QuestionCard({ className, children, data, ...props }) {
     return (
         <div
             className={cn(
-                'group w-full rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md',
+                'group w-full rounded-lg border-2 border-transparent bg-white shadow-sm cursor-pointer',
+                'hover:border-primary',
                 className
             )}
             {...props}
@@ -44,7 +45,7 @@ export default function CourseCard({ className, children, data, ...props }) {
                                 {data.description}
                             </p>
                         )}
-                        {children}
+                        <div className="cursor-pointer">{children}</div>
                     </div>
                 </div>
             </div>

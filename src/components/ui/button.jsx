@@ -36,7 +36,7 @@ const buttonVariants = cva(
     }
 )
 
-function Button({ className, variant = 'default', size = 'default', asChild = false, ...props }) {
+function Button({ className = '', variant = 'default', size = 'default', asChild = false, ...props }) {
     const Comp = asChild ? Slot.Root : 'button'
 
     return (

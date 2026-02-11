@@ -7,7 +7,7 @@ export default function TeacherLayout() {
             <TeacherHeader />
             <div className="flex flex-1 overflow-hidden">
                 <TeacherSidebar />
-                <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+                <main className="flex-1 overflow-y-auto bg-[#F6F6F6]">
                     <Outlet />
                 </main>
             </div>

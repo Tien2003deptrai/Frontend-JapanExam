@@ -1,4 +1,6 @@
 export { default as TeacherSidebar } from './Teacher/layout/Sidebar'
 export { default as TeacherHeader } from './Teacher/layout/Header'
-export { default as CourseCard } from './Teacher/CourseCard'
-export { default as DropdownCard } from './Teacher/DropdownCard'
+export { default as QuestionCard } from './Teacher/Question/QuestionCard'
+export { default as DropdownCard } from './Teacher/Question/DropdownCard'
+export { default as MySpace } from './layouts/MySpace'
+export { default as TeacherLayout } from './layouts/TeacherLayout'
