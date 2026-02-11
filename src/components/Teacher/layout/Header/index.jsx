@@ -1,5 +1,5 @@
 import { Bell, Search } from 'lucide-react'
-import { logoImage } from '@/constants/IconItem'
+import { imageIcon, logoImage } from '@/constants/IconItem'
 
 export default function TeacherHeader() {
     const showNotifications = false
@@ -46,7 +46,7 @@ export default function TeacherHeader() {
                                 <p className="text-sm font-semibold text-gray-800">Sensei Tanaka</p>
                                 <p className="text-xs text-gray-600">Giáo viên</p>
                             </div>
-                            <div className="w-10 h-10 rounded-full bg-gray-500"></div>
+                            <img src={imageIcon} className="w-10 h-10 rounded-full object-cover" />
                         </div>
                     </div>
                 </div>
