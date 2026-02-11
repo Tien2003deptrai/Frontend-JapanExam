@@ -1,3 +1,5 @@
+import { imageIcon } from "@/constants/IconItem"
+
 export const stats = {
     totalStudents: 124,
     activeClasses: 8,
@@ -119,7 +121,7 @@ export const students = [
         progress: 75,
         score: 8.5,
         attendance: '92%',
-        avatar: 'bg-blue-500',
+        avatar: imageIcon,
     },
     {
         name: 'Trần Thị B',
@@ -127,7 +129,7 @@ export const students = [
         progress: 82,
         score: 9.0,
         attendance: '95%',
-        avatar: 'bg-green-500',
+        avatar: imageIcon,
     },
     {
         name: 'Lê Văn C',
@@ -135,7 +137,7 @@ export const students = [
         progress: 68,
         score: 7.8,
         attendance: '88%',
-        avatar: 'bg-purple-500',
+        avatar: imageIcon,
     },
     {
         name: 'Phạm Thị D',
@@ -143,6 +145,6 @@ export const students = [
         progress: 90,
         score: 9.2,
         attendance: '98%',
-        avatar: 'bg-pink-500',
+        avatar: imageIcon,
     },
 ]
