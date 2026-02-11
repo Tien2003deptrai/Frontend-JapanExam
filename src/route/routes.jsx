@@ -1,16 +1,26 @@
+import TeacherLayout from '@/layouts/TeacherLayout'
+import OverviewPage from '@/pages/Teacher/Overview'
+import QuestionPage from '@/pages/Teacher/Question'
+import StudentsPage from '@/pages/Teacher/Students'
+import ProtectedRoute from '@/route/ProtectedRoute'
+
 // Admin routes, chỉ cho role ADMIN
-export const adminRoutes = [
+export const teacherRoutes = [
     {
-        path: '/admin',
-        // element: <ProtectedRoute element={<AdminLayOut />} allowedRoles={['admin']} />,
+        path: '/teacher',
+        element: <ProtectedRoute element={<TeacherLayout />} />,
         children: [
             {
                 index: true,
-                // element: <MainDash to="students" replace />,
+                element: <OverviewPage />,
             },
             {
-                path: 'courses',
-                // element: <Course />,
+                path: 'students',
+                element: <StudentsPage />,
+            },
+            {
+                path: 'question',
+                element: <QuestionPage />,
             },
         ],
     },

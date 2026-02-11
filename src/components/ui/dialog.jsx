@@ -37,7 +37,7 @@ function DialogOverlay({ className, ...props }) {
 function DialogContent({ className, children, showCloseButton = true, ...props }) {
     return (
         <DialogPortal data-slot="dialog-portal">
-            <DialogOverlay />
+            <DialogOverlay className={className} />
             <DialogPrimitive.Content
                 data-slot="dialog-content"
                 className={cn(
@@ -81,7 +81,7 @@ function DialogFooter({ className, showCloseButton = false, children, ...props }
             {children}
             {showCloseButton && (
                 <DialogPrimitive.Close asChild>
-                    <Button variant="outline">Close</Button>
+                    <Button variant="outline" className={className}>Close</Button>
                 </DialogPrimitive.Close>
             )}
         </div>

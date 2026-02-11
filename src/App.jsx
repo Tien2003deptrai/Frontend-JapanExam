@@ -4,8 +4,7 @@ import { Fragment } from 'react'
 function App() {
     return (
         <Fragment>
-            {/* <Router /> */}
-            <h1>Home</h1>
+            <Router />
         </Fragment>
     )
 }
