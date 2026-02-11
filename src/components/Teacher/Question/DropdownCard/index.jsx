@@ -1,20 +1,25 @@
 'use client'
 
 import { MoreHorizontal, PencilIcon, TrashIcon, PlusIcon, EyeIcon, HeartIcon } from 'lucide-react'
-import { buttonVariants } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 import {
     DropdownMenu,
     DropdownMenuTrigger,
     DropdownMenuContent,
     DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
+import AddQuestion from '@/components/Teacher/Question/AddQuestion'
 
 export default function DropdownCard({ onCreate, onEdit, onView, onDelete, onAddToCollection }) {
+    const [modalKey, setModalKey] = useState(false)
+
     const dropdownList = [
         { label: 'Tạo mới', icon: <PlusIcon className="size-5" />, action: onCreate },
-        { label: 'Chỉnh sửa', icon: <PencilIcon className="size-5" />, action: onEdit },
+        {
+            label: 'Chỉnh sửa',
+            icon: <PencilIcon className="size-5" />,
+            action: () => setModalKey(true),
+        },
         { label: 'Chi tiết', icon: <EyeIcon className="size-5" />, action: onView },
         { label: 'Xóa', icon: <TrashIcon className="size-5" />, action: onDelete },
         {
@@ -45,6 +50,14 @@ export default function DropdownCard({ onCreate, onEdit, onView, onDelete, onAdd
                     ))}
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            {modalKey && (
+                <AddQuestion
+                    isOpen={modalKey}
+                    onClose={() => setModalKey(false)}
+                    onSubmit={() => {}}
+                />
+            )}
         </Fragment>
     )
 }

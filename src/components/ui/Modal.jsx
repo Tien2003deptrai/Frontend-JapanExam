@@ -6,7 +6,7 @@ export default function Modal({ isOpen, onClose, children, title = '', className
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/50 opacity-100" onClick={onClose} />
+            <div className="absolute inset-0 bg-black/50" onClick={onClose} />
             <div
                 className={cn(
                     'relative bg-white rounded-lg shadow-xl w-full max-h-[90vh] overflow-auto',
