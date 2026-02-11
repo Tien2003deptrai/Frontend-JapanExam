@@ -1,3 +1,4 @@
 export { default as OverviewPage } from './Teacher/Overview'
-export { default as StudentsPage } from './Teacher/Students'
+export { default as StudentPage } from './Teacher/Student'
 export { default as QuestionPage } from './Teacher/Question'
+export { default as ExamPage } from './Teacher/Exam'

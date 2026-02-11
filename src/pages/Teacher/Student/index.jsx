@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { MySpace, StudentCard, Dropdown, Toolbar } from '@/components'
+import { useState } from 'react'
+import { MySpace, StudentCard, Dropdown, HeadingStudent } from '@/components'
 import { students as studentList } from '@/mock/dashboardData'
 
 const classOptions = [
@@ -9,14 +9,14 @@ const classOptions = [
     { label: 'JLPT N3', value: 'JLPT N3' },
 ]
 
-export default function StudentsPage() {
+export default function StudentPage() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedClass, setSelectedClass] = useState('all')
 
     return (
         <MySpace>
             <MySpace.Heading className="bg-white p-6 shadow-sm">
-                <Toolbar
+                <HeadingStudent
                     searchTerm={searchTerm}
                     onSearchChange={setSearchTerm}
                     selectedClass={selectedClass}

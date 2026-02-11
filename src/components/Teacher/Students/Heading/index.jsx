@@ -1,6 +1,7 @@
 import { Search } from 'lucide-react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-export default function Toolbar({
+export default function HeadingStudent({
     title = 'Danh sách học viên',
     searchTerm = '',
     onSearchChange,
@@ -24,17 +25,18 @@ export default function Toolbar({
                         className="rounded-lg w-80 border border-gray-300 py-2 pl-10 pr-4"
                     />
                 </div>
-                <select
-                    className="rounded-lg border border-gray-300 px-4 py-2"
-                    value={selectedClass}
-                    onChange={(event) => onClassChange?.(event.target.value)}
-                >
-                    {classOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
+                <Select value={selectedClass} onValueChange={(value) => onClassChange?.(value)}>
+                    <SelectTrigger className="w-48 rounded-lg border border-gray-300 px-4 py-2">
+                        <SelectValue placeholder="Chọn lớp" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {classOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
             </div>
         </div>
     )

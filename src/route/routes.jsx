@@ -1,5 +1,5 @@
 import { TeacherLayout } from '@/components'
-import { OverviewPage, StudentsPage, QuestionPage } from '@/pages'
+import { OverviewPage, QuestionPage, ExamPage, StudentPage } from '@/pages'
 import ProtectedRoute from '@/route/ProtectedRoute'
 
 // Admin routes, chỉ cho role ADMIN
@@ -13,12 +13,16 @@ export const teacherRoutes = [
                 element: <OverviewPage />,
             },
             {
-                path: 'students',
-                element: <StudentsPage />,
+                path: 'student',
+                element: <StudentPage />,
             },
             {
                 path: 'question',
                 element: <QuestionPage />,
+            },
+            {
+                path: 'exam',
+                element: <ExamPage />,
             },
         ],
     },
