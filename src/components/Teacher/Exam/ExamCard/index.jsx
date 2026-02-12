@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 
 const statusClasses = {
@@ -6,25 +7,27 @@ const statusClasses = {
 }
 
 export default function ExamCard({ data, children, className }) {
+    const navigate = useNavigate()
     if (!data) return null
 
-    const statusClass =
-        statusClasses[data.status] ||
-        'bg-gray-50 text-gray-600 border-gray-200'
+    const statusClass = statusClasses[data.status] || 'bg-gray-50 text-gray-600 border-gray-200'
+
+    const handleCardClick = () => {
+        navigate(`/teacher/exam/${data.id}/questions`)
+    }
 
     return (
         <div
+            role="button"
+            tabIndex={0}
+            onClick={handleCardClick}
             className={cn(
                 'group relative flex w-full gap-4 rounded-lg bg-white p-4 border-2 border-transparent hover:border-primary cursor-pointer',
                 className
             )}
         >
             <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-gray-100">
-                <img
-                    src={data.thumbnail}
-                    alt={data.title}
-                    className="h-full w-full object-cover"
-                />
+                <img src={data.thumbnail} alt={data.title} className="h-full w-full object-cover" />
                 <span className="absolute bottom-1 left-1 rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-medium text-white">
                     {data.level}
                 </span>
@@ -39,15 +42,11 @@ export default function ExamCard({ data, children, className }) {
                     <span
                         className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${statusClass}`}
                     >
-                        {data.status === 'published'
-                            ? 'Đã xuất bản'
-                            : 'Bản nháp'}
+                        {data.status === 'published' ? 'Đã xuất bản' : 'Bản nháp'}
                     </span>
                 </div>
 
-                <p className="mt-1 text-sm text-gray-500">
-                    {data.schedule}
-                </p>
+                <p className="mt-1 text-sm text-gray-500">{data.schedule}</p>
 
                 <div className="mt-2 flex items-center gap-3 text-sm text-gray-600">
                     <span>{data.duration}</span>
@@ -56,8 +55,7 @@ export default function ExamCard({ data, children, className }) {
                 </div>
             </div>
 
-            {/* Dropdown */}
-            <div className="absolute right-3 bottom-3">
+            <div className="absolute right-3 bottom-3" onClick={e => e.stopPropagation()}>
                 {children}
             </div>
         </div>

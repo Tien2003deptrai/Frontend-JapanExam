@@ -11,11 +11,8 @@ export default function QuestionCard({ className, children, data, ...props }) {
             {...props}
         >
             <div className="flex gap-4 p-3">
-                <div className="relative h-[80px] w-[70px] shrink-0 overflow-hidden rounded-md bg-gray-100">
-                    <img
-                        src={data?.thumbnail}
-                        className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-                    />
+                <div className="relative h-[80px] w-[70px] shrink-0 overflow-hidden rounded-md">
+                    <img src={data?.thumbnail} className="h-full w-full object-cover" />
                 </div>
 
                 <div className="min-w-0 flex flex-1 flex-col">
