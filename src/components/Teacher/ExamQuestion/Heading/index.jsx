@@ -16,7 +16,7 @@ const LEVEL_OPTIONS = [
     { value: 'speaking', label: 'Nói' },
 ]
 
-export default function ExamQuestionHeading({ exam }) {
+export default function ExamQuestionHeading({ exam, setIsOpen }) {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex justify-between gap-3">
@@ -57,6 +57,7 @@ export default function ExamQuestionHeading({ exam }) {
                     <button
                         type="button"
                         className="inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-black border border-gray-200 cursor-pointer"
+                        onClick={() => setIsOpen(true)}
                     >
                         <PlusIcon className="h-5 w-5" />
                         Thêm câu hỏi
