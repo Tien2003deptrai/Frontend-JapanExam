@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom'
 import {
     MySpace,
-    DropdownCard,
     ExamQuestionHeading,
     AddMultiQuestion,
     ExamQuestionCard,

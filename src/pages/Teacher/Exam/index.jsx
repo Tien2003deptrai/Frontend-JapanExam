@@ -3,35 +3,23 @@ import { AddExam, ExamCard, ExamDropdown, ExamHeading, MySpace } from '@/compone
 import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { examService } from '@/services/ExamService'
 
-const TAB_VALUES = ['n1', 'n2', 'n3', 'n4', 'n5', 'approved', 'pending']
-
 export default function ExamPage() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
-    const [activeTab, setActiveTab] = useState('n1')
-    const [loading, setLoading] = useState(true)
+    const [activeTab, setActiveTab] = useState('approved')
     const [exams, setExams] = useState([])
 
     useEffect(() => {
-        let isMounted = true
-
         const fetchExams = async () => {
             try {
                 const data = await examService.getExams()
-                if (isMounted) {
-                    setExams(data)
-                }
-            } finally {
-                if (isMounted) {
-                    setLoading(false)
-                }
+                setExams(data)
+            } catch (error) {
+                console.error(error)
             }
         }
 
         fetchExams()
-        return () => {
-            isMounted = false
-        }
     }, [])
 
     const filteredExamsByTab = useMemo(() => {
@@ -85,31 +73,25 @@ export default function ExamPage() {
                     </MySpace.Heading>
 
                     <MySpace.Body>
-                        {TAB_VALUES.map(tabValue => (
-                            <TabsContent
-                                key={tabValue}
-                                value={tabValue}
-                                className="mt-0 outline-none"
-                            >
-                                <div className="flex flex-wrap gap-4">
-                                    {filteredExams.map(exam => (
-                                        <ExamCard
-                                            key={exam.id}
-                                            data={exam}
-                                            className="w-full md:w-[calc(50%-8px)] 2xl:w-[calc(33.333333%-10.666666px)]"
-                                        >
-                                            <ExamDropdown
-                                                status={exam.status}
-                                                onView={() => {}}
-                                                onEdit={() => {}}
-                                                onToggleStatus={() => handleToggleStatus(exam.id)}
-                                                onDelete={() => handleDeleteExam(exam.id)}
-                                            />
-                                        </ExamCard>
-                                    ))}
-                                </div>
-                            </TabsContent>
-                        ))}
+                        <TabsContent value={activeTab} className="mt-0 w-full outline-none">
+                            <div className="flex flex-wrap gap-4">
+                                {filteredExams.map(exam => (
+                                    <ExamCard
+                                        key={exam.id}
+                                        data={exam}
+                                        className="w-full md:w-[calc(50%-8px)] 2xl:w-[calc(33.333333%-10.666666px)]"
+                                    >
+                                        <ExamDropdown
+                                            status={exam.status}
+                                            onView={() => {}}
+                                            onEdit={() => {}}
+                                            onToggleStatus={() => handleToggleStatus(exam.id)}
+                                            onDelete={() => handleDeleteExam(exam.id)}
+                                        />
+                                    </ExamCard>
+                                ))}
+                            </div>
+                        </TabsContent>
                     </MySpace.Body>
                 </MySpace>
             </Tabs>
