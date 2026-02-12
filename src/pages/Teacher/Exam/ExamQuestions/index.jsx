@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom'
 import {
     MySpace,
     ExamQuestionHeading,
+    ExamPreview,
     AddMultiQuestion,
     ExamQuestionCard,
     DropdownExamQuestion,
@@ -12,6 +13,7 @@ import { Fragment, useState } from 'react'
 
 export default function ExamQuestionsPage() {
     const [isOpen, setIsOpen] = useState(false)
+    const [previewOpen, setPreviewOpen] = useState(false)
     const { examId } = useParams()
 
     const exam = examData.find(e => e.id === examId)
@@ -21,7 +23,11 @@ export default function ExamQuestionsPage() {
         <Fragment>
             <MySpace>
                 <MySpace.Heading className="bg-white p-5 shadow-sm">
-                    <ExamQuestionHeading exam={exam} setIsOpen={() => setIsOpen(true)} />
+                    <ExamQuestionHeading
+                        exam={exam}
+                        setIsOpen={() => setIsOpen(true)}
+                        onPreview={() => setPreviewOpen(true)}
+                    />
                 </MySpace.Heading>
 
                 <MySpace.Body>
@@ -40,6 +46,12 @@ export default function ExamQuestionsPage() {
                     </div>
                 </MySpace.Body>
             </MySpace>
+            <ExamPreview
+                isOpen={previewOpen}
+                onClose={() => setPreviewOpen(false)}
+                exam={exam}
+                questions={questions}
+            />
             {isOpen && (
                 <AddMultiQuestion
                     isOpen={isOpen}

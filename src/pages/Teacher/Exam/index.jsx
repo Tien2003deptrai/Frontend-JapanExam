@@ -6,7 +6,7 @@ import { examService } from '@/services/ExamService'
 export default function ExamPage() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
-    const [activeTab, setActiveTab] = useState('approved')
+    const [activeTab, setActiveTab] = useState('n1')
     const [exams, setExams] = useState([])
 
     useEffect(() => {
