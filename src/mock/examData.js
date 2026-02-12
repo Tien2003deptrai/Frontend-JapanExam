@@ -38,4 +38,74 @@ export const examData = [
         thumbnail:
             'https://images.pexels.com/photos/5940713/pexels-photo-5940713.jpeg?auto=compress&cs=tinysrgb&w=800',
     },
+    {
+        id: 'exam-4',
+        title: 'JLPT N2 Mock Test #1',
+        description: 'Đề thi thử 60 phút bao gồm đầy đủ phần Từ vựng, Ngữ pháp, Đọc hiểu và Nghe.',
+        level: 'N2',
+        duration: '60 phút',
+        status: 'published',
+        totalQuestions: 60,
+        attempts: 48,
+        thumbnail:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShOWWebt_lrlou4niubqExpWQoi36X8MtQ-Q&s',
+    },
+    {
+        id: 'exam-5',
+        title: 'JLPT N1 Mock Test #1',
+        description: 'Đề thi thử 60 phút bao gồm đầy đủ phần Từ vựng, Ngữ pháp, Đọc hiểu và Nghe.',
+        level: 'N1',
+        duration: '60 phút',
+        status: 'published',
+        totalQuestions: 60,
+        attempts: 48,
+        thumbnail:
+            'https://play-lh.googleusercontent.com/kouK8XbtbPuZ5p0MYQW6NUYEftZ2k_fR7WlEwra1F74Cyk14C9bFCByROwVDd74JzQ',
+    },
+    {
+        id: 'exam-6',
+        title: 'JLPT N1 Mock Test #1',
+        description: 'Đề thi thử 60 phút bao gồm đầy đủ phần Từ vựng, Ngữ pháp, Đọc hiểu và Nghe.',
+        level: 'N1',
+        duration: '60 phút',
+        totalQuestions: 60,
+        attempts: 48,
+        thumbnail:
+            'https://play-lh.googleusercontent.com/kouK8XbtbPuZ5p0MYQW6NUYEftZ2k_fR7WlEwra1F74Cyk14C9bFCByROwVDd74JzQ',
+    },
+    {
+        id: 'exam-7',
+        title: 'JLPT N1 Mock Test #1',
+        description: 'Đề thi thử 60 phút bao gồm đầy đủ phần Từ vựng, Ngữ pháp, Đọc hiểu và Nghe.',
+        level: 'N1',
+        duration: '60 phút',
+        status: 'published',
+        totalQuestions: 60,
+        attempts: 48,
+        thumbnail:
+            'https://play-lh.googleusercontent.com/kouK8XbtbPuZ5p0MYQW6NUYEftZ2k_fR7WlEwra1F74Cyk14C9bFCByROwVDd74JzQ',
+    },
+    {
+        id: 'exam-8',
+        title: 'JLPT N1 Mock Test #1',
+        description: 'Đề thi thử 60 phút bao gồm đầy đủ phần Từ vựng, Ngữ pháp, Đọc hiểu và Nghe.',
+        level: 'N1',
+        duration: '60 phút',
+        totalQuestions: 60,
+        attempts: 48,
+        thumbnail:
+            'https://play-lh.googleusercontent.com/kouK8XbtbPuZ5p0MYQW6NUYEftZ2k_fR7WlEwra1F74Cyk14C9bFCByROwVDd74JzQ',
+    },
+    {
+        id: 'exam-9',
+        title: 'JLPT N1 Mock Test #1',
+        description: 'Đề thi thử 60 phút bao gồm đầy đủ phần Từ vựng, Ngữ pháp, Đọc hiểu và Nghe.',
+        level: 'N1',
+        duration: '60 phút',
+        status: 'published',
+        totalQuestions: 60,
+        attempts: 48,
+        thumbnail:
+            'https://play-lh.googleusercontent.com/kouK8XbtbPuZ5p0MYQW6NUYEftZ2k_fR7WlEwra1F74Cyk14C9bFCByROwVDd74JzQ',
+    },
 ]

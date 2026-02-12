@@ -1,17 +1,9 @@
-import {
-    BarChart3,
-    BookOpen,
-    Calendar,
-    Clock,
-    FileText,
-    TrendingUp,
-    Users,
-} from "lucide-react";
-import { recentAssignments, stats, upcomingLessons } from "@/mock/dashboardData";
+import { BarChart3, BookOpen, Calendar, Clock, FileText, TrendingUp, Users } from 'lucide-react'
+import { recentAssignments, stats, upcomingLessons } from '@/mock/dashboardData'
 
 export default function OverviewPage() {
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-5">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
                     <div className="flex items-center justify-between">
@@ -85,14 +77,16 @@ export default function OverviewPage() {
                         </button>
                     </div>
                     <div className="space-y-3">
-                        {upcomingLessons.map((lesson) => (
+                        {upcomingLessons.map(lesson => (
                             <div
                                 key={lesson.id}
                                 className="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r-lg hover:bg-blue-100 transition"
                             >
                                 <div className="flex items-start justify-between">
                                     <div>
-                                        <p className="font-semibold text-gray-800">{lesson.title}</p>
+                                        <p className="font-semibold text-gray-800">
+                                            {lesson.title}
+                                        </p>
                                         <p className="text-sm text-gray-600 mt-1">{lesson.class}</p>
                                     </div>
                                     <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">
@@ -115,15 +109,19 @@ export default function OverviewPage() {
                         </button>
                     </div>
                     <div className="space-y-3">
-                        {recentAssignments.map((assignment) => (
+                        {recentAssignments.map(assignment => (
                             <div
                                 key={assignment.id}
                                 className="border border-gray-200 p-4 rounded-lg hover:border-orange-300 transition"
                             >
                                 <div className="flex items-start justify-between mb-2">
                                     <div>
-                                        <p className="font-semibold text-gray-800">{assignment.title}</p>
-                                        <p className="text-sm text-gray-600 mt-1">{assignment.class}</p>
+                                        <p className="font-semibold text-gray-800">
+                                            {assignment.title}
+                                        </p>
+                                        <p className="text-sm text-gray-600 mt-1">
+                                            {assignment.class}
+                                        </p>
                                     </div>
                                     <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
                                         Hạn: {assignment.dueDate}
@@ -148,5 +146,5 @@ export default function OverviewPage() {
                 </div>
             </div>
         </div>
-    );
+    )
 }
