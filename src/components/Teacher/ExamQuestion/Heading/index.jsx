@@ -5,8 +5,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { ArrowLeft, Search } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { PlusIcon, Search } from 'lucide-react'
 
 const LEVEL_OPTIONS = [
     { value: 'all', label: 'Tất cả' },
@@ -18,29 +17,17 @@ const LEVEL_OPTIONS = [
 ]
 
 export default function ExamQuestionHeading({ exam }) {
-    const navigate = useNavigate()
-
     return (
-        <div className="flex  flex-col gap-4">
+        <div className="flex flex-col gap-4">
             <div className="flex justify-between gap-3">
-                <div>
-                    <button
-                        type="button"
-                        onClick={() => navigate('/teacher/exam')}
-                        className="inline-flex w-fit items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
-                    >
-                        <ArrowLeft className="h-4 w-4" />
-                        Quay lại đề thi
-                    </button>
-                    <div>
-                        <h1 className="text-xl font-semibold text-gray-900">
-                            Danh sách câu hỏi - {exam.title}
-                        </h1>
-                        <p className="mt-1 text-sm text-gray-500">
-                            {exam.level} • {exam.totalQuestions} câu • {exam.duration} -{' '}
-                            {exam.description}
-                        </p>
-                    </div>
+                <div className="flex-1 flex flex-col gap-2">
+                    <h1 className="text-xl font-semibold text-gray-900">
+                        Quay lại đề thi - Danh sách câu hỏi - {exam.title}
+                    </h1>
+                    <p className="mt-1 text-sm text-gray-500">
+                        {exam.level} • {exam.totalQuestions} câu • {exam.duration} -{' '}
+                        {exam.description}
+                    </p>
                 </div>
 
                 <div className="flex gap-3 sm:items-center sm:justify-end">
@@ -65,6 +52,15 @@ export default function ExamQuestionHeading({ exam }) {
                             ))}
                         </SelectContent>
                     </Select>
+
+                    {/* thêm câu hỏi */}
+                    <button
+                        type="button"
+                        className="inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-black border border-gray-200 cursor-pointer"
+                    >
+                        <PlusIcon className="h-5 w-5" />
+                        Thêm câu hỏi
+                    </button>
                 </div>
             </div>
         </div>
