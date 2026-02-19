@@ -1,41 +1,49 @@
-import { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Modal from '@/components/ui/Modal'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 
-const initialForm = {
-    title: '',
-    description: '',
-    level: 'N5',
-    status: 'draft',
-    totalQuestions: 50,
-    duration: 60,
-    schedule: '',
-}
-
 export default function AddExam({ isOpen, onClose, onSubmit }) {
-    const [form, setForm] = useState(initialForm)
+    const initialForm = useRef({
+        title: '',
+        description: '',
+        level: 'N5',
+        status: 'draft',
+        totalQuestions: 50,
+        duration: 60,
+        schedule: '',
+    })
 
-    const setField = (field) => (event) => {
-        const value = event?.target ? event.target.value : event
-        setForm((prev) => ({ ...prev, [field]: value }))
+    const [formData, setFormData] = useState({ ...initialForm.current })
+
+    const resetForm = () => setFormData({ ...initialForm.current })
+
+    const handleChange = (key, value) => {
+        const nextValue = value?.target ? value.target.value : value
+
+        setFormData((prev) => {
+            if (key === 'totalQuestions' || key === 'duration')
+                return { ...prev, [key]: Number(nextValue) }
+            return { ...prev, [key]: nextValue }
+        })
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault()
+
         const payload = {
-            ...form,
-            schedule: form.schedule || 'Chưa cập nhật',
-            duration: `${form.duration} phút`,
-            totalQuestions: Number(form.totalQuestions),
+            ...formData,
+            schedule: formData.schedule || 'Chưa cập nhật',
+            duration: `${formData.duration} phút`,
+            totalQuestions: Number(formData.totalQuestions),
         }
 
         await onSubmit?.(payload)
-        setForm(initialForm)
+        resetForm()
         onClose?.()
     }
 
     const handleClose = () => {
-        setForm(initialForm)
+        resetForm()
         onClose?.()
     }
 
@@ -45,8 +53,8 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-900">Tiêu đề đề thi</label>
                     <input
-                        value={form.title}
-                        onChange={setField('title')}
+                        value={formData.title}
+                        onChange={(e) => handleChange('title', e)}
                         className="h-11 w-full rounded-xl border border-gray-200 px-3 text-sm outline-none focus:ring-2 focus:ring-black"
                         placeholder="Nhập tên đề thi..."
                         required
@@ -56,8 +64,8 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-900">Mô tả ngắn</label>
                     <textarea
-                        value={form.description}
-                        onChange={setField('description')}
+                        value={formData.description}
+                        onChange={(e) => handleChange('description', e)}
                         className="min-h-[100px] w-full rounded-xl border border-gray-200 p-3 text-sm outline-none focus:ring-2 focus:ring-black"
                         placeholder="Đề thi gồm những phần nào, mục tiêu là gì..."
                         required
@@ -67,7 +75,7 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-900">Trình độ</label>
-                        <Select value={form.level} onValueChange={(value) => setForm((prev) => ({ ...prev, level: value }))}>
+                        <Select value={formData.level} onValueChange={(v) => handleChange('level', v)}>
                             <SelectTrigger className="h-11 w-full rounded-xl border-gray-200">
                                 <SelectValue placeholder="Chọn level" />
                             </SelectTrigger>
@@ -83,10 +91,7 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
 
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-900">Trạng thái</label>
-                        <Select
-                            value={form.status}
-                            onValueChange={(value) => setForm((prev) => ({ ...prev, status: value }))}
-                        >
+                        <Select value={formData.status} onValueChange={(v) => handleChange('status', v)}>
                             <SelectTrigger className="h-11 w-full rounded-xl border-gray-200">
                                 <SelectValue placeholder="Chọn trạng thái" />
                             </SelectTrigger>
@@ -104,8 +109,8 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
                         <input
                             type="number"
                             min="10"
-                            value={form.totalQuestions}
-                            onChange={setField('totalQuestions')}
+                            value={formData.totalQuestions}
+                            onChange={(e) => handleChange('totalQuestions', e)}
                             className="h-11 w-full rounded-xl border border-gray-200 px-3 text-sm outline-none focus:ring-2 focus:ring-black"
                             required
                         />
@@ -116,8 +121,8 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
                         <input
                             type="number"
                             min="10"
-                            value={form.duration}
-                            onChange={setField('duration')}
+                            value={formData.duration}
+                            onChange={(e) => handleChange('duration', e)}
                             className="h-11 w-full rounded-xl border border-gray-200 px-3 text-sm outline-none focus:ring-2 focus:ring-black"
                             required
                         />
@@ -128,8 +133,8 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
                     <label className="text-sm font-medium text-gray-900">Lịch thi dự kiến</label>
                     <input
                         type="datetime-local"
-                        value={form.schedule}
-                        onChange={setField('schedule')}
+                        value={formData.schedule}
+                        onChange={(e) => handleChange('schedule', e)}
                         className="h-11 w-full rounded-xl border border-gray-200 px-3 text-sm outline-none focus:ring-2 focus:ring-black"
                     />
                 </div>
