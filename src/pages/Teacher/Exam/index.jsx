@@ -5,7 +5,6 @@ import { examService } from '@/services/ExamService'
 
 export default function ExamPage() {
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [searchTerm, setSearchTerm] = useState('')
     const [activeTab, setActiveTab] = useState('n1')
     const [exams, setExams] = useState([])
 
@@ -34,17 +33,6 @@ export default function ExamPage() {
         return level ? exams.filter(exam => exam.level === level) : exams
     }, [exams, activeTab])
 
-    const filteredExams = useMemo(() => {
-        const keyword = searchTerm.trim().toLowerCase()
-        if (!keyword) return filteredExamsByTab
-        return filteredExamsByTab.filter(
-            exam =>
-                exam.title?.toLowerCase().includes(keyword) ||
-                exam.level?.toLowerCase().includes(keyword) ||
-                exam.description?.toLowerCase().includes(keyword)
-        )
-    }, [filteredExamsByTab, searchTerm])
-
     const handleCreateExam = async payload => {
         const newExam = await examService.createExam(payload)
         setExams(prev => [newExam, ...prev])
@@ -66,8 +54,6 @@ export default function ExamPage() {
                 <MySpace>
                     <MySpace.Heading className="bg-white p-5 shadow-sm">
                         <ExamHeading
-                            searchTerm={searchTerm}
-                            setSearchTerm={setSearchTerm}
                             setIsModalOpen={setIsModalOpen}
                         />
                     </MySpace.Heading>
@@ -75,7 +61,7 @@ export default function ExamPage() {
                     <MySpace.Body>
                         <TabsContent value={activeTab} className="mt-0 w-full outline-none">
                             <div className="flex flex-wrap gap-4">
-                                {filteredExams.map(exam => (
+                                {filteredExamsByTab.map(exam => (
                                     <ExamCard
                                         key={exam.id}
                                         data={exam}
