@@ -1,16 +1,27 @@
-import { TeacherLayout, AdminLayout } from '@/components'
+import { TeacherLayout, AdminLayout, StudentLayout } from '@/components'
 import {
     OverviewPage,
     QuestionPage,
     ExamPage,
     ExamQuestionsPage,
     StudentPage,
+    StudentIndexPage,
     AdminOverviewPage,
     AdminTeachersPage,
     AdminStudentsPage,
     AdminExamStructurePage,
 } from '@/pages'
 import ProtectedRoute from '@/route/ProtectedRoute'
+
+export const studentRoutes = [
+    {
+        path: '/student',
+        element: <StudentLayout />,
+        children: [
+            { index: true, element: <StudentIndexPage /> },
+        ],
+    },
+]
 
 export const teacherRoutes = [
     {
@@ -36,5 +47,25 @@ export const adminRoutes = [
             { path: 'students', element: <AdminStudentsPage /> },
             { path: 'exam-structure', element: <AdminExamStructurePage /> },
         ],
+    },
+]
+
+
+export const publicRoutes = [
+    {
+        path: '/login',
+        // element: <LoginPage />,
+    },
+    {
+        path: '/register',
+        // element: <RegisterPage />,
+    },
+    {
+        path: '/forgot-password',
+        // element: <ForgotPasswordPage />,
+    },
+    {
+        path: '/reset-password',
+        // element: <ResetPasswordPage />,
     },
 ]
