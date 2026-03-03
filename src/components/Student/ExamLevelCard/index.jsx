@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 
 export default function ExamLevelCard({ examLevel, className, ...props }) {
@@ -19,9 +20,12 @@ export default function ExamLevelCard({ examLevel, className, ...props }) {
                 </ul>
             </div>
             <div className="flex items-center justify-center p-4 pt-0">
-                <button className="px-5 py-2.5 rounded-md border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-all duration-300 cursor-pointer font-medium whitespace-nowrap">
+                <Link
+                    to={`/student/level/${examLevel.level}`}
+                    className="px-5 py-2.5 rounded-md border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-all duration-300 cursor-pointer font-medium whitespace-nowrap"
+                >
                     XEM DANH SÁCH ĐỀ THI
-                </button>
+                </Link>
             </div>
         </div>
     )

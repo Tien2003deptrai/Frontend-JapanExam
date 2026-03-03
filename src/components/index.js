@@ -26,3 +26,7 @@ export { default as ExamQuestionCard } from './Teacher/ExamQuestion/QuestionCard
 export { default as DropdownExamQuestion } from './Teacher/ExamQuestion/DropdownCard'
 export { default as QuestionHeading } from './Teacher/Question/Heading'
 export { default as ExamLevelCard } from './Student/ExamLevelCard'
+export { default as ExamListCard } from './Student/ExamListCard'
+export { default as Leaderboard } from './Student/Leaderboard'
+export { default as ExamQuestionNav } from './Student/ExamTake/ExamQuestionNav'
+export { default as ExamQuestion } from './Student/ExamTake/ExamQuestion'

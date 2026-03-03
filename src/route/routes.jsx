@@ -6,6 +6,8 @@ import {
     ExamQuestionsPage,
     StudentPage,
     StudentIndexPage,
+    ExamListPage,
+    ExamTakePage,
     AdminOverviewPage,
     AdminTeachersPage,
     AdminStudentsPage,
@@ -19,6 +21,8 @@ export const studentRoutes = [
         element: <StudentLayout />,
         children: [
             { index: true, element: <StudentIndexPage /> },
+            { path: 'level/:level', element: <ExamListPage /> },
+            { path: 'exam/:examId', element: <ExamTakePage /> },
         ],
     },
 ]
