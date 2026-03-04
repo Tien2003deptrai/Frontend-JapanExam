@@ -1,4 +1,7 @@
 export { default as OverviewPage } from './Teacher/Overview'
+export { default as StudentIndexPage } from './Student/Index'
+export { default as ExamListPage } from './Student/ExamList'
+export { default as ExamTakePage } from './Student/ExamTake'
 export { default as StudentPage } from './Teacher/Student'
 export { default as QuestionPage } from './Teacher/Question'
 export { default as ExamPage } from './Teacher/Exam'

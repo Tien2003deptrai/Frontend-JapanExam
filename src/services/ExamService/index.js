@@ -14,6 +14,13 @@ class ExamService {
         return mockDelay([...this.exams])
     }
 
+    async getExamsByLevel(level) {
+        const filtered = this.exams.filter(
+            (exam) => exam.level === level && exam.status === 'published',
+        )
+        return mockDelay([...filtered])
+    }
+
     async createExam(payload) {
         const newExam = {
             id: `exam-${Date.now()}`,
