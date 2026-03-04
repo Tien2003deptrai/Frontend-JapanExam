@@ -1,3 +1,4 @@
+import { logoImage } from '@/constants/IconItem'
 import { Link } from 'react-router-dom'
 
 const navLinks = [
@@ -13,10 +14,8 @@ export default function StudentHeader() {
             <div className="max-w-7xl mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
                     <Link to="/student" className="flex items-center gap-2">
-                        <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center">
-                            <span className="text-white font-bold text-xl">G</span>
-                        </div>
-                        <span className="text-2xl font-bold text-red-600">GOJAPAN</span>
+                        <img src={logoImage} alt="JLPT Insight" className="w-10 h-10" />
+                        <span className="text-2xl font-bold text-gray-800">JLPT Insight </span>
                     </Link>
 
                     <nav className="flex items-center gap-6">
