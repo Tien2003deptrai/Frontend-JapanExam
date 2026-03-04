@@ -23,7 +23,7 @@ const appLinks = [
 export default function StudentFooter() {
     return (
         <footer className="bg-white border-t border-gray-200">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="max-w-7xl mx-auto px-4 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Column 1 - Company Info */}
                     <div>
@@ -37,7 +37,9 @@ export default function StudentFooter() {
                             Công ty Cổ phần Tập đoàn Giáo dục và Tuyển dụng Unigate
                         </p>
                         <p className="text-sm text-gray-600">MST: 0123456789</p>
-                        <p className="text-sm text-gray-600 mb-2">Địa chỉ: Tầng 4, CEO Tower, Mễ Trì, Hà Nội</p>
+                        <p className="text-sm text-gray-600 mb-2">
+                            Địa chỉ: Tầng 4, CEO Tower, Mễ Trì, Hà Nội
+                        </p>
                         <p className="text-sm text-gray-600">Hotline: 0247.101.9868</p>
                         <p className="text-sm text-gray-600">Email: lienhe@gojapan.vn</p>
                     </div>
@@ -46,9 +48,12 @@ export default function StudentFooter() {
                     <div>
                         <h4 className="font-semibold text-gray-900 mb-4">Liên kết</h4>
                         <ul className="space-y-2">
-                            {footerLinks.map((link) => (
+                            {footerLinks.map(link => (
                                 <li key={link.path}>
-                                    <Link to={link.path} className="text-gray-600 hover:text-red-600 transition-colors">
+                                    <Link
+                                        to={link.path}
+                                        className="text-gray-600 hover:text-red-600 transition-colors"
+                                    >
                                         {link.label}
                                     </Link>
                                 </li>
@@ -60,9 +65,12 @@ export default function StudentFooter() {
                     <div>
                         <h4 className="font-semibold text-gray-900 mb-4">Cộng đồng</h4>
                         <ul className="space-y-2">
-                            {communityLinks.map((link) => (
+                            {communityLinks.map(link => (
                                 <li key={link.label}>
-                                    <a href={link.url} className="text-gray-600 hover:text-red-600 transition-colors">
+                                    <a
+                                        href={link.url}
+                                        className="text-gray-600 hover:text-red-600 transition-colors"
+                                    >
                                         {link.label}
                                     </a>
                                 </li>
@@ -74,9 +82,12 @@ export default function StudentFooter() {
                     <div>
                         <h4 className="font-semibold text-gray-900 mb-4">Tải ứng dụng</h4>
                         <ul className="space-y-2">
-                            {appLinks.map((link) => (
+                            {appLinks.map(link => (
                                 <li key={link.label}>
-                                    <a href={link.url} className="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-1">
+                                    <a
+                                        href={link.url}
+                                        className="text-gray-600 hover:text-red-600 transition-colors flex items-center gap-1"
+                                    >
                                         {link.label}
                                         <ExternalLink className="w-4 h-4" />
                                     </a>

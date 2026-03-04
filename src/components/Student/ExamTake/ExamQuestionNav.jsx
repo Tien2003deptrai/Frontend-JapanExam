@@ -25,7 +25,8 @@ export default function ExamQuestionNav({
                 return (
                     <div key={sectionIdx} className="px-10">
                         <p className="text-xl font-normal text-gray-700 mb-2">
-                            {SECTION_LABEL}{sectionIdx + 1}:
+                            {SECTION_LABEL}
+                            {sectionIdx + 1}:
                         </p>
                         <div className="flex flex-wrap gap-4">
                             {sectionQuestions.map((q, i) => {
@@ -35,14 +36,12 @@ export default function ExamQuestionNav({
                                     <button
                                         key={q.id}
                                         type="button"
-                                        onClick={() =>
-                                            onScrollToQuestion(globalIndex)
-                                        }
+                                        onClick={() => onScrollToQuestion(globalIndex)}
                                         className={cn(
-                                            'w-8 h-8 rounded-full border-4 text-sm font-medium transition-colors',
+                                            'w-8 h-8 rounded-full border-3 text-sm font-medium transition-colors',
                                             isAnswered
                                                 ? 'border-blue-500 bg-blue-500 text-white'
-                                                : 'border-blue-500 bg-white text-blue-600 hover:bg-blue-50',
+                                                : 'border-blue-500 bg-white text-blue-600 hover:bg-blue-50'
                                         )}
                                     >
                                         {q.order}
