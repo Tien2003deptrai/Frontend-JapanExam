@@ -64,8 +64,13 @@ export default function ExamListPage() {
                             </div>
                         ) : (
                             <div className="flex flex-wrap gap-4">
-                                {exams.map((exam) => (
-                                    <ExamListCard key={exam.id} exam={exam} className="w-full md:w-[calc(50%-8px)] 2xl:w-[calc(33.333333%-10.666666px)]" />
+                                {/* chỉ có 2 đề thi trên 1 hàng */}
+                                {exams.map(exam => (
+                                    <ExamListCard
+                                        key={exam.id}
+                                        exam={exam}
+                                        className="w-full md:w-[calc(50%-8px)]"
+                                    />
                                 ))}
                             </div>
                         )}
