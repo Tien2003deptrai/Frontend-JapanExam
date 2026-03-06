@@ -8,6 +8,8 @@ import {
     StudentIndexPage,
     ExamListPage,
     ExamTakePage,
+    PracticeListPage,
+    PracticeTakePage,
     AdminOverviewPage,
     AdminTeachersPage,
     AdminStudentsPage,
@@ -23,6 +25,8 @@ export const studentRoutes = [
             { index: true, element: <StudentIndexPage /> },
             { path: 'level/:level', element: <ExamListPage /> },
             { path: 'exam/:examId', element: <ExamTakePage /> },
+            { path: 'practice-list', element: <PracticeListPage /> },
+            { path: 'practice/:code', element: <PracticeTakePage /> },
         ],
     },
 ]
@@ -53,7 +57,6 @@ export const adminRoutes = [
         ],
     },
 ]
-
 
 export const publicRoutes = [
     {
