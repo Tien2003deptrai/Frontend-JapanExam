@@ -14,7 +14,11 @@ export default function StudentHeader() {
             <div className="max-w-7xl mx-auto px-3 md:px-4">
                 <div className="flex flex-wrap items-center justify-between gap-3 py-3 md:py-0 md:h-16 md:gap-6">
                     <Link to="/student" className="flex items-center gap-2 shrink-0">
-                        <img src={logoImage} alt="JLPT Insight" className="w-8 h-8 md:w-10 md:h-10" />
+                        <img
+                            src={logoImage}
+                            alt="JLPT Insight"
+                            className="w-8 h-8 md:w-10 md:h-10"
+                        />
                         <span className="text-lg md:text-2xl font-bold text-gray-800">
                             JLPT Insight
                         </span>
