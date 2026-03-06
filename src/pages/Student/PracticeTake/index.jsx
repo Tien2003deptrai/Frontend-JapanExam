@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { useState, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { getPracticeExam } from '@/mock/praticeData'
 import ExamTakeContent from '@/components/Student/ExamTake/ExamTakeContent'
 
@@ -7,15 +7,9 @@ export default function PracticeTakePage() {
     const { code } = useParams()
     const { exam, questions } = useMemo(() => getPracticeExam(code || '01'), [code])
 
-    const [answers, setAnswers] = useState({})
-    const [submitted, setSubmitted] = useState(false)
-
-    const onAnswerChange = useCallback((questionId, key) => {
-        setAnswers(prev => ({ ...prev, [questionId]: key }))
-    }, [])
-
-    const handleSubmit = useCallback(() => {
-        setSubmitted(true)
+    const handleSubmit = useCallback(answers => {
+        // TODO: gọi API nộp bài luyện, callback (redirect / thông báo)
+        console.log('Nộp bài luyện', answers)
     }, [])
 
     if (!code) {
@@ -36,12 +30,7 @@ export default function PracticeTakePage() {
         <ExamTakeContent
             exam={exam}
             questions={questions}
-            session={{
-                answers,
-                submitted,
-                onAnswerChange,
-                onSubmit: handleSubmit,
-            }}
+            onSubmit={handleSubmit}
         />
     )
 }

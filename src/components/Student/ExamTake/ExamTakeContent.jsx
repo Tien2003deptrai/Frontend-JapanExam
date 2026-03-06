@@ -1,30 +1,62 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState, useEffect } from 'react'
 import { ExamQuestionNav, ExamQuestion, HeaderExam } from '@/components'
 import TimerExam from '@/components/Student/ExamTake/TimerExam'
+import { parseDurationMinutes } from '@/utils/formatTime'
 
 const QUESTIONS_PER_SECTION = 10
+const DEFAULT_TOTAL_SCORE = 178
 
 /**
  * Nội dung làm bài chung cho Exam và Practice.
+ * Tự quản lý answers + submitted; khi nộp bài gọi onSubmit(answers) để page xử lý API/callback.
+ * Nếu exam có duration → chế độ thi: tự xử lý timer + hiển thị tổng điểm.
  * @param {Object} props
- * @param {Object} props.exam - { title, level, duration? }
+ * @param {Object} props.exam - { title, level, duration?, totalScore? }
  * @param {Array} props.questions - Danh sách câu hỏi
- * @param {Object} props.session - { answers, submitted, onAnswerChange, onSubmit }
- * @param {Object} [props.examMeta] - Nếu có: hiển thị timer + tổng điểm (chế độ thi). { secondsLeft, totalMinutes, totalScore }
+ * @param {function(Object): void} [props.onSubmit] - (answers) => void, gọi khi user bấm Nộp bài (để gọi API / callback)
  */
 export default function ExamTakeContent({
     exam,
     questions,
-    session,
-    examMeta,
+    onSubmit,
 }) {
-    const { answers, submitted, onAnswerChange, onSubmit } = session
+    const [answers, setAnswers] = useState({})
+    const [submitted, setSubmitted] = useState(false)
+
+    const onAnswerChange = useCallback((questionId, key) => {
+        setAnswers(prev => ({ ...prev, [questionId]: key }))
+    }, [])
+
+    const handleSubmit = useCallback(() => {
+        setSubmitted(true)
+        onSubmit?.(answers)
+    }, [answers, onSubmit])
+
     const questionRefs = useRef({})
     const sectionCount = Math.max(1, Math.ceil(questions.length / QUESTIONS_PER_SECTION))
     const sections = Array.from({ length: sectionCount }, (_, i) =>
         questions.slice(i * QUESTIONS_PER_SECTION, (i + 1) * QUESTIONS_PER_SECTION)
     )
-    const isExam = examMeta != null
+
+    const isExam = exam?.duration != null
+    const totalMinutes = isExam ? parseDurationMinutes(exam.duration) : null
+    const totalSeconds = totalMinutes != null ? totalMinutes * 60 : 0
+    const totalScore = exam?.totalScore ?? DEFAULT_TOTAL_SCORE
+
+    const [secondsLeft, setSecondsLeft] = useState(null)
+
+    useEffect(() => {
+        if (!isExam) return
+        setSecondsLeft(totalSeconds)
+    }, [isExam, totalSeconds])
+
+    useEffect(() => {
+        if (!isExam || secondsLeft == null || secondsLeft <= 0 || submitted) return
+        const t = setInterval(() => {
+            setSecondsLeft(prev => (prev <= 1 ? 0 : prev - 1))
+        }, 1000)
+        return () => clearInterval(t)
+    }, [isExam, secondsLeft, submitted])
 
     const onScrollToQuestion = useCallback(
         index => {
@@ -42,14 +74,14 @@ export default function ExamTakeContent({
         <div className="min-h-screen bg-gray-50">
             <HeaderExam
                 exam={exam}
-                totalMinutes={examMeta?.totalMinutes}
-                totalScore={examMeta?.totalScore}
+                totalMinutes={isExam ? totalMinutes : undefined}
+                totalScore={isExam ? totalScore : undefined}
             />
 
             <div className="w-full flex flex-col lg:flex-row gap-4 lg:gap-6 px-3 py-4 md:px-4 md:py-6">
                 <aside className="w-full lg:w-[320px] xl:w-[500px] lg:shrink-0 flex flex-col gap-4 lg:gap-5 items-center order-2 lg:order-1">
-                    {isExam && examMeta.secondsLeft != null && (
-                        <TimerExam secondsLeft={examMeta.secondsLeft} />
+                    {isExam && secondsLeft != null && (
+                        <TimerExam secondsLeft={secondsLeft} />
                     )}
                     <ExamQuestionNav
                         sections={sections}
@@ -99,7 +131,7 @@ export default function ExamTakeContent({
                     <div className="flex justify-center p-4 md:p-5 bg-white border-t border-gray-200">
                         <button
                             type="button"
-                            onClick={onSubmit}
+                            onClick={handleSubmit}
                             disabled={submitted}
                             className="rounded-lg w-full sm:w-auto min-w-0 sm:min-w-[320px] bg-blue-500 px-6 py-2.5 font-semibold text-white text-lg md:text-xl hover:bg-blue-700 disabled:opacity-50"
                         >

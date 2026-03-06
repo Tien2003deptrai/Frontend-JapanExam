@@ -1,8 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { examData } from '@/mock/examData'
 import { getExamTakingQuestions } from '@/mock/examTakingData'
-import { parseDurationMinutes } from '@/utils/formatTime'
 import ExamTakeContent from '@/components/Student/ExamTake/ExamTakeContent'
 
 export default function ExamTakePage() {
@@ -10,33 +9,9 @@ export default function ExamTakePage() {
     const exam = examData.find(e => e.id === examId)
     const questions = useMemo(() => (exam ? getExamTakingQuestions(examId) : []), [exam, examId])
 
-    const [answers, setAnswers] = useState({})
-    const [secondsLeft, setSecondsLeft] = useState(null)
-    const [submitted, setSubmitted] = useState(false)
-
-    const totalMinutes = exam ? parseDurationMinutes(exam.duration) : 60
-    const totalSeconds = totalMinutes * 60
-    const totalScore = 178
-
-    useEffect(() => {
-        if (!exam) return
-        setSecondsLeft(totalSeconds)
-    }, [exam, totalSeconds])
-
-    useEffect(() => {
-        if (secondsLeft == null || secondsLeft <= 0 || submitted) return
-        const t = setInterval(() => {
-            setSecondsLeft(prev => (prev <= 1 ? 0 : prev - 1))
-        }, 1000)
-        return () => clearInterval(t)
-    }, [secondsLeft, submitted])
-
-    const onAnswerChange = useCallback((questionId, key) => {
-        setAnswers(prev => ({ ...prev, [questionId]: key }))
-    }, [])
-
-    const handleSubmit = useCallback(() => {
-        setSubmitted(true)
+    const handleSubmit = useCallback(answers => {
+        // TODO: gọi API nộp bài, sau đó callback (redirect / thông báo)
+        console.log('Nộp bài', answers)
     }, [])
 
     if (!exam) {
@@ -54,17 +29,7 @@ export default function ExamTakePage() {
         <ExamTakeContent
             exam={exam}
             questions={questions}
-            session={{
-                answers,
-                submitted,
-                onAnswerChange,
-                onSubmit: handleSubmit,
-            }}
-            examMeta={{
-                secondsLeft,
-                totalMinutes,
-                totalScore,
-            }}
+            onSubmit={handleSubmit}
         />
     )
 }
