@@ -1,4 +1,7 @@
 export default function HeaderExam({ exam, totalMinutes, totalScore }) {
+    const showTimer = totalMinutes != null
+    const showScore = totalScore != null
+
     return (
         <header className="sticky top-0 z-10 border-b bg-[#6c757d] shadow-sm">
             <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 py-5">
@@ -9,12 +12,16 @@ export default function HeaderExam({ exam, totalMinutes, totalScore }) {
                     <span className="rounded-full bg-[#0dcaf0] px-3 py-1 font-semibold text-white text-sm">
                         Cấp độ: {exam.level}
                     </span>
-                    <span className="rounded-full bg-[#0dcaf0] px-3 py-1 font-semibold text-white text-sm">
-                        {totalMinutes} phút
-                    </span>
-                    <span className="rounded-full bg-[#0dcaf0] px-3 py-1 font-semibold text-white text-sm">
-                        Tổng điểm: {totalScore}
-                    </span>
+                    {showTimer && (
+                        <span className="rounded-full bg-[#0dcaf0] px-3 py-1 font-semibold text-white text-sm">
+                            {totalMinutes} phút
+                        </span>
+                    )}
+                    {showScore && (
+                        <span className="rounded-full bg-[#0dcaf0] px-3 py-1 font-semibold text-white text-sm">
+                            Tổng điểm: {totalScore}
+                        </span>
+                    )}
                 </div>
             </div>
         </header>
