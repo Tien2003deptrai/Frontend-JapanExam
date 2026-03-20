@@ -1,6 +1,12 @@
-import React, { useRef, useState } from 'react'
 import Modal from '@/components/ui/Modal'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
+import { useRef, useState } from 'react'
 
 export default function AddExam({ isOpen, onClose, onSubmit }) {
     const initialForm = useRef({
@@ -20,14 +26,14 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
     const handleChange = (key, value) => {
         const nextValue = value?.target ? value.target.value : value
 
-        setFormData((prev) => {
+        setFormData(prev => {
             if (key === 'totalQuestions' || key === 'duration')
                 return { ...prev, [key]: Number(nextValue) }
             return { ...prev, [key]: nextValue }
         })
     }
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async event => {
         event.preventDefault()
 
         const payload = {
@@ -54,7 +60,7 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
                     <label className="text-sm font-medium text-gray-900">Tiêu đề đề thi</label>
                     <input
                         value={formData.title}
-                        onChange={(e) => handleChange('title', e)}
+                        onChange={e => handleChange('title', e)}
                         className="h-11 w-full rounded-xl border border-gray-200 px-3 text-sm outline-none focus:ring-2 focus:ring-black"
                         placeholder="Nhập tên đề thi..."
                         required
@@ -65,8 +71,8 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
                     <label className="text-sm font-medium text-gray-900">Mô tả ngắn</label>
                     <textarea
                         value={formData.description}
-                        onChange={(e) => handleChange('description', e)}
-                        className="min-h-[100px] w-full rounded-xl border border-gray-200 p-3 text-sm outline-none focus:ring-2 focus:ring-black"
+                        onChange={e => handleChange('description', e)}
+                        className="min-h-25 w-full rounded-xl border border-gray-200 p-3 text-sm outline-none focus:ring-2 focus:ring-black"
                         placeholder="Đề thi gồm những phần nào, mục tiêu là gì..."
                         required
                     />
@@ -75,12 +81,15 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-900">Trình độ</label>
-                        <Select value={formData.level} onValueChange={(v) => handleChange('level', v)}>
+                        <Select
+                            value={formData.level}
+                            onValueChange={v => handleChange('level', v)}
+                        >
                             <SelectTrigger className="h-11 w-full rounded-xl border-gray-200">
                                 <SelectValue placeholder="Chọn level" />
                             </SelectTrigger>
                             <SelectContent>
-                                {['N5', 'N4', 'N3', 'N2', 'N1'].map((level) => (
+                                {['N5', 'N4', 'N3', 'N2', 'N1'].map(level => (
                                     <SelectItem key={level} value={level}>
                                         {level}
                                     </SelectItem>
@@ -91,7 +100,10 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
 
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-900">Trạng thái</label>
-                        <Select value={formData.status} onValueChange={(v) => handleChange('status', v)}>
+                        <Select
+                            value={formData.status}
+                            onValueChange={v => handleChange('status', v)}
+                        >
                             <SelectTrigger className="h-11 w-full rounded-xl border-gray-200">
                                 <SelectValue placeholder="Chọn trạng thái" />
                             </SelectTrigger>
@@ -110,19 +122,21 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
                             type="number"
                             min="10"
                             value={formData.totalQuestions}
-                            onChange={(e) => handleChange('totalQuestions', e)}
+                            onChange={e => handleChange('totalQuestions', e)}
                             className="h-11 w-full rounded-xl border border-gray-200 px-3 text-sm outline-none focus:ring-2 focus:ring-black"
                             required
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-900">Thời lượng (phút)</label>
+                        <label className="text-sm font-medium text-gray-900">
+                            Thời lượng (phút)
+                        </label>
                         <input
                             type="number"
                             min="10"
                             value={formData.duration}
-                            onChange={(e) => handleChange('duration', e)}
+                            onChange={e => handleChange('duration', e)}
                             className="h-11 w-full rounded-xl border border-gray-200 px-3 text-sm outline-none focus:ring-2 focus:ring-black"
                             required
                         />
@@ -134,7 +148,7 @@ export default function AddExam({ isOpen, onClose, onSubmit }) {
                     <input
                         type="datetime-local"
                         value={formData.schedule}
-                        onChange={(e) => handleChange('schedule', e)}
+                        onChange={e => handleChange('schedule', e)}
                         className="h-11 w-full rounded-xl border border-gray-200 px-3 text-sm outline-none focus:ring-2 focus:ring-black"
                     />
                 </div>

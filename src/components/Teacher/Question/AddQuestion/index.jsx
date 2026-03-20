@@ -1,22 +1,97 @@
-import Modal from '@/components/ui/Modal'
+import { cn } from '@/lib/utils'
+import { Layers, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
+
 import BlockBuilder from '../BlockBuilder'
 
 /**
- * AddQuestion — opens a full-screen modal wrapping BlockBuilder.
- * Replaces the old simple form with the new builder supporting
- * standalone + group questions.
+ * AddQuestion — full-screen Claymorphism overlay wrapping BlockBuilder.
+ * Zero shadcn — uses createPortal + native HTML.
  */
 export default function AddQuestion({ isOpen, onClose, onSubmit }) {
+    const [animateIn, setAnimateIn] = useState(false)
+
     const handleSuccess = () => {
         onSubmit?.()
         onClose?.()
     }
 
-    return (
-        <Modal isOpen={isOpen} onClose={onClose} className="max-w-5xl" title="Tạo câu hỏi mới">
-            <div className="mt-2">
-                <BlockBuilder onSuccess={handleSuccess} onCancel={onClose} />
+    /* lock body scroll */
+    useEffect(() => {
+        if (!isOpen) return
+        document.body.style.overflow = 'hidden'
+        return () => {
+            document.body.style.overflow = ''
+        }
+    }, [isOpen])
+
+    /* Animate in */
+    useEffect(() => {
+        if (isOpen) {
+            requestAnimationFrame(() => setAnimateIn(true))
+        } else {
+            setAnimateIn(false)
+        }
+    }, [isOpen])
+
+    /* ESC key */
+    useEffect(() => {
+        if (!isOpen) return
+        const handler = e => e.key === 'Escape' && onClose?.()
+        window.addEventListener('keydown', handler)
+        return () => window.removeEventListener('keydown', handler)
+    }, [isOpen, onClose])
+
+    if (!isOpen) return null
+
+    return createPortal(
+        <div
+            className={cn(
+                'fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:p-6 transition-[background-color] duration-150',
+                animateIn ? 'bg-black/30' : 'bg-transparent'
+            )}
+            onClick={e => e.target === e.currentTarget && onClose?.()}
+        >
+            <div
+                className={cn(
+                    'relative my-4 w-full max-w-5xl rounded-2xl border-[3px] border-white/70 bg-[#F8FAFC] transition-[opacity,transform] duration-150 will-change-[opacity,transform]',
+                    animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
+                )}
+                style={{
+                    boxShadow:
+                        '8px 8px 24px rgba(0,0,0,0.08), -4px -4px 12px rgba(255,255,255,0.6), inset 0 2px 0 rgba(255,255,255,0.5)',
+                }}
+            >
+                {/* Header */}
+                <div className="flex items-center justify-between border-b-2 border-[#E2E8F0] bg-white/80 px-5 py-3.5 rounded-t-2xl">
+                    <div className="flex items-center gap-2.5">
+                        <div className="flex size-8 items-center justify-center rounded-xl bg-[#2563EB]/10">
+                            <Layers className="size-4 text-[#2563EB]" />
+                        </div>
+                        <h2
+                            className="text-base font-bold text-[#1E293B]"
+                            style={{ fontFamily: "'Noto Serif JP', serif" }}
+                        >
+                            Tạo câu hỏi mới
+                        </h2>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="rounded-xl p-2 text-[#94A3B8] transition-colors hover:bg-[#F1F5F9] hover:text-[#475569] cursor-pointer"
+                        aria-label="Đóng"
+                    >
+                        <X className="size-5" />
+                    </button>
+                </div>
+
+                {/* Body */}
+                <div className="p-5 sm:p-6">
+                    <BlockBuilder onSuccess={handleSuccess} onCancel={onClose} />
+                </div>
             </div>
-        </Modal>
+        </div>,
+        document.body
     )
 }

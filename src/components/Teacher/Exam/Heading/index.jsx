@@ -1,5 +1,3 @@
-import { PlusIcon } from 'lucide-react'
-import { TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
     Select,
     SelectContent,
@@ -7,6 +5,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
+import { TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { PlusIcon } from 'lucide-react'
 
 const TAB_ITEMS = [
     { value: 'n1', label: 'Đề N1' },
@@ -28,7 +28,15 @@ const LEVEL_OPTIONS = [
     { value: 'last_week', label: 'Tuần trước' },
 ]
 
-export default function ExamHeading({ setIsModalOpen }) {
+export default function ExamHeading({ setIsModalOpen, onCreateExam }) {
+    const handleCreate = () => {
+        if (onCreateExam) {
+            onCreateExam()
+        } else if (setIsModalOpen) {
+            setIsModalOpen(true)
+        }
+    }
+
     return (
         <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -42,7 +50,7 @@ export default function ExamHeading({ setIsModalOpen }) {
                 </div>
 
                 <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto lg:justify-end">
-                    <div className="w-full sm:w-[220px]">
+                    <div className="w-full sm:w-55">
                         <Select>
                             <SelectTrigger className="h-10 w-full rounded-lg border border-gray-300 px-3">
                                 <SelectValue placeholder="Theo ngày tạo đề thi" />
@@ -59,8 +67,8 @@ export default function ExamHeading({ setIsModalOpen }) {
 
                     <button
                         type="button"
-                        onClick={() => setIsModalOpen(true)}
-                        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-black transition hover:bg-gray-50 sm:w-auto"
+                        onClick={handleCreate}
+                        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-black transition hover:bg-gray-50 sm:w-auto cursor-pointer"
                     >
                         <PlusIcon className="h-4 w-4 shrink-0" />
                         <span>Tạo đề thi</span>

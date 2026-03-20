@@ -1,14 +1,14 @@
 'use client'
 
-import { MoreHorizontal, PencilIcon, TrashIcon, PlusIcon, EyeIcon, HeartIcon } from 'lucide-react'
+import AddQuestion from '@/components/Teacher/Question/AddQuestion'
 import {
     DropdownMenu,
-    DropdownMenuTrigger,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { EyeIcon, HeartIcon, MoreHorizontal, PencilIcon, PlusIcon, TrashIcon } from 'lucide-react'
 import { Fragment, useState } from 'react'
-import AddQuestion from '@/components/Teacher/Question/AddQuestion'
 
 export default function DropdownCard({ onCreate, onEdit, onView, onDelete, onAddToCollection }) {
     const [modalKey, setModalKey] = useState(false)
@@ -33,7 +33,9 @@ export default function DropdownCard({ onCreate, onEdit, onView, onDelete, onAdd
         <Fragment>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <MoreHorizontal className="size-5" />
+                    <div onClick={e => e.stopPropagation()}>
+                        <MoreHorizontal className="size-5 cursor-pointer hover:text-gray-600" />
+                    </div>
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end" sideOffset={8} className="min-w-[220px] py-3">

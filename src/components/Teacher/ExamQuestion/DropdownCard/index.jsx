@@ -1,12 +1,12 @@
 'use client'
 
-import { MoreHorizontal, TrashIcon, EyeIcon } from 'lucide-react'
 import {
     DropdownMenu,
-    DropdownMenuTrigger,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { EyeIcon, MoreHorizontal, TrashIcon } from 'lucide-react'
 import { Fragment } from 'react'
 
 export default function DropdownExamQuestion({ onView, onDelete }) {
@@ -22,7 +22,7 @@ export default function DropdownExamQuestion({ onView, onDelete }) {
                     <MoreHorizontal className="size-5" />
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" sideOffset={8} className="min-w-[220px] py-3">
+                <DropdownMenuContent align="end" sideOffset={8} className="min-w-55 py-3">
                     {dropdownList.map(item => (
                         <DropdownMenuItem
                             inset={false}

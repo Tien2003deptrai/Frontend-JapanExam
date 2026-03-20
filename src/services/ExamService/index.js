@@ -1,52 +1,70 @@
-import { examData } from '@/mock/examData'
-
-const mockDelay = (result, time = 500) =>
-    new Promise((resolve) => {
-        setTimeout(() => resolve(result), time)
-    })
+import axiosInstance from '@/services/axiosInstance'
 
 class ExamService {
-    constructor() {
-        this.exams = [...examData]
-    }
+    api = axiosInstance
 
-    async getExams() {
-        return mockDelay([...this.exams])
-    }
-
-    async getExamsByLevel(level) {
-        const filtered = this.exams.filter(
-            (exam) => exam.level === level && exam.status === 'published',
-        )
-        return mockDelay([...filtered])
-    }
-
+    /**
+     * Tạo bài thi mới
+     * POST /exam/create
+     * Hỗ trợ 3 cách tạo block: blockId, questionIds, inline questions
+     */
     async createExam(payload) {
-        const newExam = {
-            id: `exam-${Date.now()}`,
-            status: 'draft',
-            attempts: 0,
-            thumbnail:
-                'https://images.pexels.com/photos/5428004/pexels-photo-5428004.jpeg?auto=compress&cs=tinysrgb&w=800',
-            ...payload,
-        }
-
-        this.exams = [newExam, ...this.exams]
-        return mockDelay(newExam)
+        const response = await this.api.post('/exams/create', payload)
+        return response.data
     }
 
-    async toggleExamStatus(id) {
-        this.exams = this.exams.map((exam) =>
-            exam.id === id ? { ...exam, status: exam.status === 'published' ? 'draft' : 'published' } : exam
-        )
-
-        const updatedExam = this.exams.find((exam) => exam.id === id)
-        return mockDelay(updatedExam)
+    /**
+     * Danh sách bài thi (có search & pagination)
+     * POST /exam/list
+     */
+    async getExams(body = {}) {
+        const response = await this.api.post('/exams/list', body)
+        return response.data
     }
 
-    async deleteExam(id) {
-        this.exams = this.exams.filter((exam) => exam.id !== id)
-        return mockDelay({ success: true })
+    /**
+     * Chi tiết bài thi (kèm tất cả câu hỏi)
+     * POST /exam/get-by-id
+     */
+    async getExamById(examId) {
+        const response = await this.api.post('/exams/get-by-id', { examId })
+        return response.data
+    }
+
+    /**
+     * Cập nhật metadata bài thi
+     * POST /exam/update
+     */
+    async updateExam(body) {
+        const response = await this.api.post('/exams/update', body)
+        return response.data
+    }
+
+    /**
+     * Xóa bài thi
+     * POST /exam/delete
+     */
+    async deleteExam(examId) {
+        const response = await this.api.post('/exams/delete', { examId })
+        return response.data
+    }
+
+    /**
+     * Publish bài thi
+     * POST /exam/publish
+     */
+    async publishExam(examId) {
+        const response = await this.api.post('/exams/publish', { examId })
+        return response.data
+    }
+
+    /**
+     * Lấy bài thi mẫu
+     * GET /exam/sample
+     */
+    async getSampleExam() {
+        const response = await this.api.get('/exams/sample')
+        return response.data
     }
 }
 

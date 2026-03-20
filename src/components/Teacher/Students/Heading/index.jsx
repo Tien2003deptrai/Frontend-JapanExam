@@ -1,5 +1,11 @@
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
 import { Search } from 'lucide-react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export default function HeadingStudent({
     title = 'Danh sách học viên',
@@ -9,7 +15,6 @@ export default function HeadingStudent({
     onClassChange,
     classOptions,
 }) {
-
     return (
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <h3 className="text-xl font-bold text-gray-800">{title}</h3>
@@ -21,16 +26,16 @@ export default function HeadingStudent({
                         type="text"
                         placeholder="Tìm học viên..."
                         value={searchTerm}
-                        onChange={(event) => onSearchChange?.(event.target.value)}
+                        onChange={event => onSearchChange?.(event.target.value)}
                         className="rounded-lg w-80 border border-gray-300 py-2 pl-10 pr-4"
                     />
                 </div>
-                <Select value={selectedClass} onValueChange={(value) => onClassChange?.(value)}>
+                <Select value={selectedClass} onValueChange={value => onClassChange?.(value)}>
                     <SelectTrigger className="w-48 rounded-lg border border-gray-300 px-4 py-2">
                         <SelectValue placeholder="Chọn lớp" />
                     </SelectTrigger>
                     <SelectContent>
-                        {classOptions.map((option) => (
+                        {classOptions.map(option => (
                             <SelectItem key={option.value} value={option.value}>
                                 {option.label}
                             </SelectItem>

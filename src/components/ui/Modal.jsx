@@ -1,31 +1,60 @@
 import { cn } from '@/lib/utils'
-import { XIcon } from 'lucide-react'
+import { X } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 
-export default function Modal({ isOpen, onClose, children, title = '', className = '' }) {
+export default function Modal({ isOpen, onClose, title, className, children }) {
+    const overlayRef = useRef(null)
+
+    useEffect(() => {
+        if (!isOpen) return
+        const handler = e => e.key === 'Escape' && onClose?.()
+        document.addEventListener('keydown', handler)
+        return () => document.removeEventListener('keydown', handler)
+    }, [isOpen, onClose])
+
+    useEffect(() => {
+        if (!isOpen) return
+        const prev = document.body.style.overflow
+        document.body.style.overflow = 'hidden'
+        return () => {
+            document.body.style.overflow = prev
+        }
+    }, [isOpen])
+
     if (!isOpen) return null
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-            <div
-                className={cn(
-                    'relative bg-white rounded-lg shadow-xl w-full max-h-[90vh] overflow-auto',
-                    className
-                )}
-            >
-                <div className="p-5">
-                    <div className="flex items-center justify-center relative">
-                        <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
-                        <button
-                            onClick={onClose}
-                            className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer absolute top-0 right-0"
-                        >
-                            <XIcon className="size-5" />
-                        </button>
-                    </div>
-                    <div className="mt-5">{children}</div>
+    const handleOverlayClick = e => {
+        if (e.target === overlayRef.current) onClose?.()
+    }
+
+    return createPortal(
+        <div
+            ref={overlayRef}
+            onClick={handleOverlayClick}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label={title}
+        >
+            <div className={cn('relative w-full rounded-2xl bg-white shadow-xl', className)}>
+                {/* Header */}
+                <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+                    <h2 className="text-lg font-bold text-gray-900">{title}</h2>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 cursor-pointer"
+                        aria-label="Đóng"
+                    >
+                        <X className="size-5" />
+                    </button>
                 </div>
+
+                {/* Body */}
+                <div className="px-6 py-5">{children}</div>
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }

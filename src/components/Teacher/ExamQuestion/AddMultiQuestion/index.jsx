@@ -1,9 +1,8 @@
-import { useState, useMemo } from 'react'
 import Modal from '@/components/ui/Modal'
-import { questionData } from '@/mock/questionData'
 import { cn } from '@/lib/utils'
+import { questionData } from '@/mock/questionData'
+import { useMemo, useState } from 'react'
 import ExamQuestionCard from '../QuestionCard'
-import SelectToggle from '@/components/ui/SelectToggle'
 
 export default function AddMultiQuestion({ isOpen, onClose, onSubmit }) {
     const [selectedIds, setSelectedIds] = useState(new Set())
@@ -35,7 +34,7 @@ export default function AddMultiQuestion({ isOpen, onClose, onSubmit }) {
     if (!isOpen) return null
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Thêm câu hỏi vào đề" className="w-[750px]">
+        <Modal isOpen={isOpen} onClose={onClose} title="Thêm câu hỏi vào đề" className="max-w-3xl">
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
                     <span className="text-sm text-gray-600">
@@ -72,10 +71,12 @@ export default function AddMultiQuestion({ isOpen, onClose, onSubmit }) {
                                     'w-full cursor-pointer rounded-lg transition-[box-shadow,border-color] sm:w-[calc(50%-6px)]'
                                 )}
                             >
-                                <ExamQuestionCard className="w-full !bg-[#F6F6F6]" data={{ ...q }}>
-                                    <SelectToggle
+                                <ExamQuestionCard className="w-full bg-[#F6F6F6]!" data={{ ...q }}>
+                                    <input
+                                        type="checkbox"
                                         checked={selectedIds.has(q.id)}
-                                        onToggle={() => toggle(q.id)}
+                                        onChange={() => toggle(q.id)}
+                                        className="size-5 cursor-pointer accent-blue-600"
                                     />
                                 </ExamQuestionCard>
                             </div>

@@ -16,7 +16,13 @@ const LEVEL_OPTIONS = [
     { value: 'speaking', label: 'Nói' },
 ]
 
-export default function ExamQuestionHeading({ exam, setIsOpen, onPreview }) {
+export default function ExamQuestionHeading({
+    exam,
+    setIsOpen,
+    onPreview,
+    selectedSkill = 'all',
+    onSkillChange,
+}) {
     return (
         <div className="flex flex-col gap-4">
             {/* Header text */}
@@ -42,8 +48,8 @@ export default function ExamQuestionHeading({ exam, setIsOpen, onPreview }) {
                 </div>
 
                 <div className="flex flex-col gap-2 sm:flex-row lg:justify-end">
-                    <div className="w-full sm:w-[200px]">
-                        <Select>
+                    <div className="w-full sm:w-50">
+                        <Select value={selectedSkill} onValueChange={v => onSkillChange?.(v)}>
                             <SelectTrigger className="h-10 w-full rounded-lg border border-gray-300 px-3">
                                 <SelectValue placeholder="Theo kĩ năng" />
                             </SelectTrigger>

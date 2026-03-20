@@ -4,7 +4,11 @@
         "paths": { "@/*": ["src/*"] },
         "checkJs": true,
         "noEmit": true,
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true
     },
     "include": ["src", "eslint.config.js", "types"]
 }
