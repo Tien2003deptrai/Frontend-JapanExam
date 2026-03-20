@@ -1,14 +1,16 @@
 import useAuthStore from '@/stores/authStore'
 import { Navigate } from 'react-router-dom'
 
-// cho phép truyền allowedRoles vào nếu cần
-
 const ProtectedRoute = ({ element, allowedRoles = [] }) => {
-    // const { isAuthenticated, user } = useAuthStore()
+    const { isAuthenticated, user } = useAuthStore()
 
-    // if (!isAuthenticated || !allowedRoles.includes(user?.roles)) {
-    //     return <Navigate to="/not-allowed" replace />
-    // }
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />
+    }
+
+    if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
+        return <Navigate to="/login" replace />
+    }
 
     return element
 }

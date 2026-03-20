@@ -1,20 +1,21 @@
-import { TeacherLayout, AdminLayout, StudentLayout } from '@/components'
+import { AdminLayout, StudentLayout, TeacherLayout } from '@/components'
 import {
-    OverviewPage,
-    QuestionPage,
+    AdminExamStructurePage,
+    AdminOverviewPage,
+    AdminStudentsPage,
+    AdminTeachersPage,
+    ExamListPage,
     ExamPage,
     ExamQuestionsPage,
-    StudentPage,
-    StudentIndexPage,
-    ExamListPage,
     ExamTakePage,
+    OverviewPage,
     PracticeListPage,
     PracticeTakePage,
-    AdminOverviewPage,
-    AdminTeachersPage,
-    AdminStudentsPage,
-    AdminExamStructurePage,
+    QuestionPage,
+    StudentIndexPage,
+    StudentPage,
 } from '@/pages'
+import LoginPage from '@/pages/LoginPage'
 import ProtectedRoute from '@/route/ProtectedRoute'
 
 export const studentRoutes = [
@@ -28,6 +29,13 @@ export const studentRoutes = [
             { path: 'practice-list', element: <PracticeListPage /> },
             { path: 'practice/:code', element: <PracticeTakePage /> },
         ],
+    },
+]
+
+export const publicRoutes = [
+    {
+        path: '/login',
+        element: <LoginPage />,
     },
 ]
 
@@ -55,24 +63,5 @@ export const adminRoutes = [
             { path: 'students', element: <AdminStudentsPage /> },
             { path: 'exam-structure', element: <AdminExamStructurePage /> },
         ],
-    },
-]
-
-export const publicRoutes = [
-    {
-        path: '/login',
-        // element: <LoginPage />,
-    },
-    {
-        path: '/register',
-        // element: <RegisterPage />,
-    },
-    {
-        path: '/forgot-password',
-        // element: <ForgotPasswordPage />,
-    },
-    {
-        path: '/reset-password',
-        // element: <ResetPasswordPage />,
     },
 ]

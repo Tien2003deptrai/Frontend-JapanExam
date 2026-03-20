@@ -1,19 +1,26 @@
-import { Fragment, useMemo, useState } from 'react'
 import {
-    QuestionCard,
-    DropdownCard,
-    MySpace,
     AddQuestion,
+    DropdownCard,
     ImportQuestion,
+    MySpace,
+    QuestionCard,
     QuestionHeading,
 } from '@/components'
 import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { questionData } from '@/mock/questionData'
+import { Fragment, useCallback, useMemo, useState } from 'react'
 
 export default function QuestionPage() {
     const [addOpen, setAddOpen] = useState(false)
     const [importOpen, setImportOpen] = useState(false)
     const [activeTab, setActiveTab] = useState('all')
+    const [refreshKey, setRefreshKey] = useState(0)
+
+    const handleCreated = useCallback(() => {
+        // Increment key to trigger future data re-fetch when list API is wired
+        setRefreshKey(k => k + 1)
+        setAddOpen(false)
+    }, [])
 
     const filteredQuestions = useMemo(() => {
         if (activeTab === 'all') return questionData
@@ -53,7 +60,11 @@ export default function QuestionPage() {
                     </MySpace.Body>
                 </MySpace>
             </Tabs>
-            <AddQuestion isOpen={addOpen} onClose={() => setAddOpen(false)} onSubmit={() => {}} />
+            <AddQuestion
+                isOpen={addOpen}
+                onClose={() => setAddOpen(false)}
+                onSubmit={handleCreated}
+            />
             <ImportQuestion
                 isOpen={importOpen}
                 onClose={() => setImportOpen(false)}
