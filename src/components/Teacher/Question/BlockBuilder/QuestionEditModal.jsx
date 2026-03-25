@@ -291,7 +291,7 @@ export default function QuestionEditModal({ isOpen, onClose, question, onSave })
                                         disabled={aiLoading || !form.questionText}
                                         className={cn(
                                             'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer',
-                                            'bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-white hover:from-[#7C3AED] hover:to-[#4F46E5]',
+                                            'bg-linear-to-r from-[#8B5CF6] to-[#6366F1] text-white hover:from-[#7C3AED] hover:to-[#4F46E5]',
                                             'shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:shadow-[0_4px_12px_rgba(139,92,246,0.35)]',
                                             'disabled:opacity-50 disabled:cursor-not-allowed'
                                         )}

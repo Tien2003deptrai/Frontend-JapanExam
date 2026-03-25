@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils'
 import { questionBlockService } from '@/services/QuestionBlockService'
+import useAuthStore from '@/stores/authStore'
 import {
     BookOpen,
     CheckCircle2,
@@ -51,6 +52,12 @@ export default function QuestionDetailModal({
     const [animateIn, setAnimateIn] = useState(false)
     const [expandedQuestions, setExpandedQuestions] = useState({})
     const overlayRef = useRef(null)
+    const user = useAuthStore(s => s.user)
+
+    const isOwner =
+        user?.role === 'admin' ||
+        block?.createdBy?._id === user?._id ||
+        block?.createdBy === user?._id
 
     // Fetch block detail if blockId is provided and no inline data
     useEffect(() => {
@@ -373,31 +380,33 @@ export default function QuestionDetailModal({
                                                         </span>
                                                     )}
 
-                                                {/* Action buttons */}
-                                                <div className="flex items-center gap-1 ml-auto">
-                                                    <button
-                                                        type="button"
-                                                        onClick={e => {
-                                                            e.stopPropagation()
-                                                            handleEditQuestion(q, block._id)
-                                                        }}
-                                                        className="p-1.5 rounded-lg hover:bg-blue-100 transition-colors"
-                                                        title="Sửa câu hỏi"
-                                                    >
-                                                        <Edit2 className="size-3.5 text-blue-600" />
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        onClick={e => {
-                                                            e.stopPropagation()
-                                                            handleDeleteQuestion(q._id)
-                                                        }}
-                                                        className="p-1.5 rounded-lg hover:bg-red-100 transition-colors"
-                                                        title="Xóa câu hỏi"
-                                                    >
-                                                        <Trash2 className="size-3.5 text-red-600" />
-                                                    </button>
-                                                </div>
+                                                {/* Action buttons – owner only */}
+                                                {isOwner && (
+                                                    <div className="flex items-center gap-1 ml-auto">
+                                                        <button
+                                                            type="button"
+                                                            onClick={e => {
+                                                                e.stopPropagation()
+                                                                handleEditQuestion(q, block._id)
+                                                            }}
+                                                            className="p-1.5 rounded-lg hover:bg-blue-100 transition-colors"
+                                                            title="Sửa câu hỏi"
+                                                        >
+                                                            <Edit2 className="size-3.5 text-blue-600" />
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={e => {
+                                                                e.stopPropagation()
+                                                                handleDeleteQuestion(q._id)
+                                                            }}
+                                                            className="p-1.5 rounded-lg hover:bg-red-100 transition-colors"
+                                                            title="Xóa câu hỏi"
+                                                        >
+                                                            <Trash2 className="size-3.5 text-red-600" />
+                                                        </button>
+                                                    </div>
+                                                )}
 
                                                 {isExpanded ? (
                                                     <ChevronUp className="size-4 text-[#94A3B8]" />
@@ -551,13 +560,17 @@ export default function QuestionDetailModal({
 
                 {/* Footer */}
                 <div className="sticky bottom-0 flex justify-between items-center rounded-b-3xl border-t-2 border-[#E2E8F0] bg-white px-6 py-4">
-                    <button
-                        type="button"
-                        onClick={handleEditBlock}
-                        className="h-10 rounded-xl border-2 border-blue-500 bg-blue-50 px-5 text-sm font-semibold text-blue-600 transition-all duration-200 hover:bg-blue-100 cursor-pointer"
-                    >
-                        Chỉnh sửa nhóm
-                    </button>
+                    {isOwner ? (
+                        <button
+                            type="button"
+                            onClick={handleEditBlock}
+                            className="h-10 rounded-xl border-2 border-blue-500 bg-blue-50 px-5 text-sm font-semibold text-blue-600 transition-all duration-200 hover:bg-blue-100 cursor-pointer"
+                        >
+                            Chỉnh sửa nhóm
+                        </button>
+                    ) : (
+                        <span />
+                    )}
 
                     <button
                         type="button"

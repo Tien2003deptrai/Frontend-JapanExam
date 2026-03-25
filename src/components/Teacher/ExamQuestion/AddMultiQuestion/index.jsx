@@ -1,11 +1,24 @@
 import Modal from '@/components/ui/Modal'
 import { cn } from '@/lib/utils'
-import { questionData } from '@/mock/questionData'
-import { useMemo, useState } from 'react'
+import { questionBlockService } from '@/services/QuestionBlockService'
+import { Loader2 } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
 import ExamQuestionCard from '../QuestionCard'
 
 export default function AddMultiQuestion({ isOpen, onClose, onSubmit }) {
     const [selectedIds, setSelectedIds] = useState(new Set())
+    const [blocks, setBlocks] = useState([])
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (!isOpen) return
+        setLoading(true)
+        questionBlockService
+            .getBlocks({ limit: 100 })
+            .then(res => setBlocks(res?.data || []))
+            .catch(() => setBlocks([]))
+            .finally(() => setLoading(false))
+    }, [isOpen])
 
     const toggle = id => {
         setSelectedIds(prev => {
@@ -16,12 +29,12 @@ export default function AddMultiQuestion({ isOpen, onClose, onSubmit }) {
         })
     }
 
-    const selectAll = () => setSelectedIds(new Set(questionData.map(q => q.id)))
+    const selectAll = () => setSelectedIds(new Set(blocks.map(q => q._id || q.id)))
     const clearAll = () => setSelectedIds(new Set())
 
     const selectedList = useMemo(
-        () => questionData.filter(q => selectedIds.has(q.id)),
-        [selectedIds]
+        () => blocks.filter(q => selectedIds.has(q._id || q.id)),
+        [selectedIds, blocks]
     )
 
     const handleSubmit = e => {
@@ -38,7 +51,7 @@ export default function AddMultiQuestion({ isOpen, onClose, onSubmit }) {
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
                     <span className="text-sm text-gray-600">
-                        Đã chọn <strong>{selectedIds.size}</strong> / {questionData.length} câu hỏi
+                        Đã chọn <strong>{selectedIds.size}</strong> / {blocks.length} câu hỏi
                     </span>
                     <div className="flex gap-2">
                         <button
@@ -59,29 +72,42 @@ export default function AddMultiQuestion({ isOpen, onClose, onSubmit }) {
                 </div>
 
                 <div className="max-h-[50vh] overflow-y-auto pr-1">
-                    <div className="flex flex-wrap gap-3">
-                        {questionData.map(q => (
-                            <div
-                                key={q.id}
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => toggle(q.id)}
-                                onKeyDown={e => e.key === 'Enter' && toggle(q.id)}
-                                className={cn(
-                                    'w-full cursor-pointer rounded-lg transition-[box-shadow,border-color] sm:w-[calc(50%-6px)]'
-                                )}
-                            >
-                                <ExamQuestionCard className="w-full bg-[#F6F6F6]!" data={{ ...q }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedIds.has(q.id)}
-                                        onChange={() => toggle(q.id)}
-                                        className="size-5 cursor-pointer accent-blue-600"
-                                    />
-                                </ExamQuestionCard>
-                            </div>
-                        ))}
-                    </div>
+                    {loading ? (
+                        <div className="flex items-center justify-center py-10">
+                            <Loader2 className="size-5 animate-spin text-primary" />
+                        </div>
+                    ) : blocks.length === 0 ? (
+                        <p className="text-sm text-text-muted text-center py-10">
+                            Chưa có câu hỏi nào trong ngân hàng
+                        </p>
+                    ) : (
+                        <div className="flex flex-wrap gap-3">
+                            {blocks.map(q => {
+                                const qId = q._id || q.id
+                                return (
+                                    <div
+                                        key={qId}
+                                        role="button"
+                                        tabIndex={0}
+                                        onClick={() => toggle(qId)}
+                                        onKeyDown={e => e.key === 'Enter' && toggle(qId)}
+                                        className={cn(
+                                            'w-full cursor-pointer rounded-lg transition-[box-shadow,border-color] sm:w-[calc(50%-6px)]'
+                                        )}
+                                    >
+                                        <ExamQuestionCard className="w-full bg-[#F6F6F6]!" data={q}>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedIds.has(qId)}
+                                                onChange={() => toggle(qId)}
+                                                className="size-5 cursor-pointer accent-blue-600"
+                                            />
+                                        </ExamQuestionCard>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex justify-end gap-2 border-t border-gray-100 pt-4">

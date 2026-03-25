@@ -1,0 +1,87 @@
+import axiosInstance from '@/services/axiosInstance'
+
+class ExamAttemptService {
+    api = axiosInstance
+
+    /**
+     * Bắt đầu bài thi
+     * POST /exam-attempts/start
+     * @param {Object} params
+     * @param {string} params.examId
+     * @param {"full_test"|"practice"} params.mode
+     * @param {string[]} [params.practiceSections] - section types khi practice
+     * @param {number} [params.practiceMinutes] - thời gian tự chọn khi practice
+     */
+    async startExam({ examId, mode = 'full_test', practiceSections, practiceMinutes }) {
+        const response = await this.api.post('/exam-attempts/start', {
+            examId,
+            mode,
+            practiceSections,
+            practiceMinutes,
+        })
+        return response.data
+    }
+
+    /**
+     * Nộp bài thi (gửi tất cả câu trả lời)
+     * POST /exam-attempts/submit
+     * @param {Object} params
+     * @param {string} params.attemptId
+     * @param {Array<{questionId: string, selectedAnswer: string}>} params.answers
+     */
+    async submitExam({ attemptId, answers }) {
+        const response = await this.api.post('/exam-attempts/submit', { attemptId, answers })
+        return response.data
+    }
+
+    /**
+     * Chấm luyện tập (không lưu DB)
+     * POST /exam-attempts/evaluate-practice
+     */
+    async evaluatePractice({ examId, sectionTypes, answers }) {
+        const response = await this.api.post('/exam-attempts/evaluate-practice', {
+            examId,
+            sectionTypes,
+            answers,
+        })
+        return response.data
+    }
+
+    /**
+     * Thông tin exam cho student (không kèm câu hỏi)
+     * POST /exam-attempts/exam-info
+     */
+    async getExamInfo(examId) {
+        const response = await this.api.post('/exam-attempts/exam-info', { examId })
+        return response.data
+    }
+
+    /**
+     * Kết quả bài thi đã nộp (có chi tiết từng câu)
+     * POST /exam-attempts/result
+     */
+    async getAttemptResult(attemptId) {
+        const response = await this.api.post('/exam-attempts/result', { attemptId })
+        return response.data
+    }
+
+    /**
+     * Lịch sử làm bài
+     * POST /exam-attempts/my-attempts
+     */
+    async getMyAttempts(params = {}) {
+        const response = await this.api.post('/exam-attempts/my-attempts', params)
+        return response.data
+    }
+
+    /**
+     * Chi tiết lần làm bài
+     * POST /exam-attempts/get-by-id
+     */
+    async getAttemptById(attemptId) {
+        const response = await this.api.post('/exam-attempts/get-by-id', { attemptId })
+        return response.data
+    }
+}
+
+export const examAttemptService = new ExamAttemptService()

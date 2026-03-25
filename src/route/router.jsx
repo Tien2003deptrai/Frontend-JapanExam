@@ -1,13 +1,7 @@
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
-import { adminRoutes, publicRoutes, studentRoutes, teacherRoutes } from './routes'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { adminRoutes, notFoundRoute, publicRoutes, studentRoutes, teacherRoutes } from './routes'
 
-const routes = [
-    { path: '/', element: <Navigate to="/login" replace /> },
-    ...publicRoutes,
-    ...studentRoutes,
-    ...teacherRoutes,
-    ...adminRoutes,
-]
+const routes = [...publicRoutes, ...studentRoutes, ...teacherRoutes, ...adminRoutes, notFoundRoute]
 
 const router = createBrowserRouter(routes)
 

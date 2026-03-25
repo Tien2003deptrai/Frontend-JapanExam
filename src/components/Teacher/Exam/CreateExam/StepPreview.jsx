@@ -79,13 +79,6 @@ export default function StepPreview({ metadata, sections, totalQuestions }) {
                     <span className="rounded-full bg-[#EFF6FF] px-2.5 py-1 text-xs font-medium text-[#2563EB]">
                         {metadata.level}
                     </span>
-                    <span className="rounded-full bg-[#F1F5F9] px-2.5 py-1 text-xs font-medium text-[#64748B]">
-                        {metadata.type === 'mock'
-                            ? 'Thi thử'
-                            : metadata.type === 'official_format'
-                              ? 'Format JLPT'
-                              : 'Luyện tập'}
-                    </span>
                     {metadata.isPublic && (
                         <span className="rounded-full bg-[#DCFCE7] px-2.5 py-1 text-xs font-medium text-[#22C55E]">
                             Công khai

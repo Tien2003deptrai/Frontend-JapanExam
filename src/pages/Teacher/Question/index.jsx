@@ -1,6 +1,5 @@
 import {
     AddQuestion,
-    DropdownCard,
     EditBlockFullModal,
     ImportQuestion,
     MySpace,
@@ -10,12 +9,14 @@ import {
 } from '@/components'
 import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { questionBlockService } from '@/services/QuestionBlockService'
-import { Loader2 } from 'lucide-react'
+import useAuthStore from '@/stores/authStore'
+import { Loader2, PencilLine, Trash2 } from 'lucide-react'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 
 const PAGE_LIMIT = 20
 
 export default function QuestionPage() {
+    const user = useAuthStore(s => s.user)
     const [addOpen, setAddOpen] = useState(false)
     const [importOpen, setImportOpen] = useState(false)
     const [activeTab, setActiveTab] = useState('all')
@@ -171,18 +172,20 @@ export default function QuestionPage() {
                             {/* Loading state (first load) */}
                             {loading && blocks.length === 0 && (
                                 <div className="flex items-center justify-center py-20">
-                                    <Loader2 className="size-6 animate-spin text-[#2563EB]" />
-                                    <span className="ml-2 text-sm text-gray-500">Đang tải...</span>
+                                    <Loader2 className="size-6 animate-spin text-primary" />
+                                    <span className="ml-2 text-sm text-text-light">
+                                        Đang tải...
+                                    </span>
                                 </div>
                             )}
 
                             {/* Empty state */}
                             {!loading && blocks.length === 0 && (
                                 <div className="flex flex-col items-center justify-center py-20 text-center">
-                                    <p className="text-base font-semibold text-gray-500">
+                                    <p className="text-base font-semibold text-text-light">
                                         Không tìm thấy câu hỏi nào
                                     </p>
-                                    <p className="mt-1 text-sm text-gray-400">
+                                    <p className="mt-1 text-sm text-text-muted">
                                         {debouncedSearch
                                             ? 'Thử tìm kiếm với từ khóa khác'
                                             : 'Hãy tạo câu hỏi đầu tiên'}
@@ -194,22 +197,47 @@ export default function QuestionPage() {
                             {blocks.length > 0 && (
                                 <>
                                     <div className="flex flex-wrap gap-4">
-                                        {blocks.map(block => (
-                                            <QuestionCard
-                                                key={block._id}
-                                                data={block}
-                                                onClick={() => setViewingBlock(block)}
-                                                className="w-full min-w-0 md:w-[calc(50%-8px)] 2xl:w-[calc(33.333333%-10.666666px)]"
-                                            >
-                                                <DropdownCard
-                                                    onCreate={() => {}}
-                                                    onEdit={() => setEditingBlock(block)}
-                                                    onView={() => setViewingBlock(block)}
-                                                    onDelete={() => handleDelete(block._id)}
-                                                    onAddToCollection={() => {}}
-                                                />
-                                            </QuestionCard>
-                                        ))}
+                                        {blocks.map(block => {
+                                            const isOwner =
+                                                user?.role === 'admin' ||
+                                                block.createdBy?._id === user?._id ||
+                                                block.createdBy === user?._id
+                                            return (
+                                                <QuestionCard
+                                                    key={block._id}
+                                                    data={block}
+                                                    onClick={() => setViewingBlock(block)}
+                                                    className="w-full min-w-0 md:w-[calc(50%-8px)] 2xl:w-[calc(33.333333%-10.666666px)]"
+                                                >
+                                                    {isOwner && (
+                                                        <div className="flex items-center gap-1">
+                                                            <button
+                                                                type="button"
+                                                                title="Chỉnh sửa"
+                                                                onClick={e => {
+                                                                    e.stopPropagation()
+                                                                    setEditingBlock(block)
+                                                                }}
+                                                                className="rounded-md p-1.5 text-gray-400 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
+                                                            >
+                                                                <PencilLine className="size-4" />
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                title="Xóa"
+                                                                onClick={e => {
+                                                                    e.stopPropagation()
+                                                                    handleDelete(block._id)
+                                                                }}
+                                                                className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
+                                                            >
+                                                                <Trash2 className="size-4" />
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </QuestionCard>
+                                            )
+                                        })}
                                     </div>
 
                                     {/* Load more */}
@@ -219,7 +247,7 @@ export default function QuestionPage() {
                                                 type="button"
                                                 onClick={handleLoadMore}
                                                 disabled={loading}
-                                                className="inline-flex h-10 items-center gap-2 rounded-xl border-2 border-[#E2E8F0] bg-white px-5 text-sm font-semibold text-[#475569] transition-all duration-200 hover:bg-[#F1F5F9] disabled:opacity-50 cursor-pointer"
+                                                className="inline-flex h-10 items-center gap-2 rounded-xl border-2 border-border bg-white px-5 text-sm font-semibold text-text-light transition-all duration-200 hover:bg-surface disabled:opacity-50 cursor-pointer"
                                             >
                                                 {loading ? (
                                                     <Loader2 className="size-4 animate-spin" />
@@ -230,7 +258,7 @@ export default function QuestionPage() {
                                     )}
 
                                     {/* Total count */}
-                                    <div className="mt-4 text-center text-xs text-gray-400">
+                                    <div className="mt-4 text-center text-xs text-text-muted">
                                         Hiển thị {blocks.length} / {total} nhóm câu hỏi
                                     </div>
                                 </>

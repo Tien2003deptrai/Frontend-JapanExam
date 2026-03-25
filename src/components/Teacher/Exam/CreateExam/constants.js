@@ -91,7 +91,6 @@ export const WIZARD_STEPS = [
 export const DEFAULT_EXAM_FORM = {
     title: '',
     level: 'N5',
-    type: 'official_format', // always JLPT format
     duration: 105,
     description: '',
     instructions: '',

@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom'
-import StudentHeader from '@/components/Student/layout/Header'
-import StudentFooter from '@/components/Student/layout/Footer'
+import StudentFooter from './StudentFooter'
+import StudentHeader from './StudentHeader'
 
 export default function StudentLayout() {
     return (
-        <div className="min-h-screen flex flex-col bg-white">
+        <div className="min-h-screen flex flex-col bg-background">
             <StudentHeader />
             <main className="flex-1">
                 <Outlet />

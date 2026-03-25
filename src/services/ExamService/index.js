@@ -41,6 +41,57 @@ class ExamService {
     }
 
     /**
+     * Thêm block câu hỏi vào section
+     * POST /exam/add-block
+     */
+    async addBlockToExam({ examId, sectionIndex, block }) {
+        const response = await this.api.post('/exams/add-block', { examId, sectionIndex, block })
+        return response.data
+    }
+
+    /**
+     * Xóa block khỏi exam
+     * POST /exam/remove-block
+     */
+    async removeBlockFromExam({ examId, sectionIndex, blockIndex }) {
+        const response = await this.api.post('/exams/remove-block', {
+            examId,
+            sectionIndex,
+            blockIndex,
+        })
+        return response.data
+    }
+
+    /**
+     * Cập nhật câu hỏi embedded trong exam
+     * POST /exam/update-question
+     */
+    async updateExamQuestion({ examId, sectionIndex, blockIndex, questionIndex, questionData }) {
+        const response = await this.api.post('/exams/update-question', {
+            examId,
+            sectionIndex,
+            blockIndex,
+            questionIndex,
+            questionData,
+        })
+        return response.data
+    }
+
+    /**
+     * Xóa câu hỏi embedded trong exam
+     * POST /exam/remove-question
+     */
+    async removeQuestionFromExam({ examId, sectionIndex, blockIndex, questionIndex }) {
+        const response = await this.api.post('/exams/remove-question', {
+            examId,
+            sectionIndex,
+            blockIndex,
+            questionIndex,
+        })
+        return response.data
+    }
+
+    /**
      * Xóa bài thi
      * POST /exam/delete
      */
@@ -64,6 +115,15 @@ class ExamService {
      */
     async getSampleExam() {
         const response = await this.api.get('/exams/sample')
+        return response.data
+    }
+
+    /**
+     * Lấy danh sách đề thi theo level (cho student, không cần đăng nhập)
+     * POST /public/exams
+     */
+    async getExamsByLevel(level) {
+        const response = await this.api.post('/public/exams', { level })
         return response.data
     }
 }

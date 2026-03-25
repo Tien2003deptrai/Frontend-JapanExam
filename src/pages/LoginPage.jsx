@@ -1,7 +1,10 @@
+import Button from '@/components/ui/Button'
+import Input from '@/components/ui/Input'
 import { authService } from '@/services/AuthService'
 import useAuthStore from '@/stores/authStore'
+import { toast } from '@/utils/toast'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function LoginPage() {
     const [email, setEmail] = useState('')
@@ -18,10 +21,11 @@ export default function LoginPage() {
         try {
             const { data } = await authService.login({ email, password })
             login(data.data.user, data.data.token)
+            toast.success('Đăng nhập thành công!')
             const role = data.data.user?.role
             if (role === 'admin') navigate('/admin', { replace: true })
             else if (role === 'teacher') navigate('/teacher', { replace: true })
-            else navigate('/student', { replace: true })
+            else navigate('/', { replace: true })
         } catch (err) {
             setError(err.response?.data?.message || 'Đăng nhập thất bại')
         } finally {
@@ -30,77 +34,69 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-[#EFF6FF] via-white to-[#F0F9FF] px-4">
-            <div
-                className="w-full max-w-md rounded-3xl bg-white p-8"
-                style={{
-                    border: '3px solid rgba(255,255,255,0.7)',
-                    boxShadow:
-                        '12px 12px 32px rgba(0,0,0,0.08), -6px -6px 16px rgba(255,255,255,0.8), inset 0 2px 0 rgba(255,255,255,0.6)',
-                }}
-            >
-                <div className="mb-8 text-center">
-                    <h1
-                        className="text-2xl font-black text-[#1E293B]"
-                        style={{ fontFamily: "'Noto Serif JP', serif" }}
-                    >
-                        JLPT Exam
-                    </h1>
-                    <p className="mt-2 text-sm text-[#64748B]">Đăng nhập để tiếp tục</p>
+        <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-background via-white to-secondary/10 px-4">
+            {/* Decorative elements */}
+            <div className="absolute top-10 left-10 size-32 bg-primary/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-10 right-10 size-40 bg-cta/5 rounded-full blur-3xl" />
+
+            <div className="w-full max-w-md relative">
+                {/* Logo */}
+                <div className="text-center mb-8">
+                    <div className="inline-flex items-center gap-3 mb-4">
+                        <div className="size-12 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-xl shadow-md">
+                            J
+                        </div>
+                    </div>
+                    <h1 className="text-3xl font-bold text-text">JLPT Insight</h1>
+                    <p className="text-text-light mt-2">Nền tảng luyện thi JLPT trực tuyến</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
-                    {error && (
-                        <div className="rounded-xl border-2 border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-                            {error}
-                        </div>
-                    )}
+                {/* Card */}
+                <div className="bg-white rounded-2xl border border-border-light shadow-lg p-8">
+                    <h2 className="text-xl font-bold text-text mb-1">Đăng nhập</h2>
+                    <p className="text-sm text-text-muted mb-6">Nhập thông tin để tiếp tục</p>
 
-                    <div className="space-y-1.5">
-                        <label
-                            htmlFor="email"
-                            className="block text-xs font-semibold text-[#475569]"
-                        >
-                            Email
-                        </label>
-                        <input
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        {error && (
+                            <div className="rounded-lg bg-destructive-light border border-red-200 px-4 py-3 text-sm text-destructive">
+                                {error}
+                            </div>
+                        )}
+
+                        <Input
+                            label="Email"
                             id="email"
                             type="email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
                             placeholder="you@example.com"
                             required
-                            className="h-11 w-full rounded-xl border-2 border-[#E2E8F0] bg-[#F8FAFC] px-4 text-sm text-[#1E293B] outline-none transition-all duration-200 placeholder:text-[#94A3B8] hover:border-[#CBD5E1] focus:border-[#2563EB] focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.12)]"
+                            autoComplete="email"
                         />
-                    </div>
 
-                    <div className="space-y-1.5">
-                        <label
-                            htmlFor="password"
-                            className="block text-xs font-semibold text-[#475569]"
-                        >
-                            Mật khẩu
-                        </label>
-                        <input
+                        <Input
+                            label="Mật khẩu"
                             id="password"
                             type="password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
                             placeholder="••••••••"
                             required
-                            className="h-11 w-full rounded-xl border-2 border-[#E2E8F0] bg-[#F8FAFC] px-4 text-sm text-[#1E293B] outline-none transition-all duration-200 placeholder:text-[#94A3B8] hover:border-[#CBD5E1] focus:border-[#2563EB] focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.12)]"
+                            autoComplete="current-password"
                         />
-                    </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="h-11 w-full rounded-xl bg-[#2563EB] text-sm font-bold text-white transition-all duration-200 hover:bg-[#1D4ED8] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-                        style={{ boxShadow: '0 4px 14px rgba(37,99,235,0.25)' }}
-                    >
-                        {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
-                    </button>
-                </form>
+                        <Button type="submit" loading={loading} className="w-full">
+                            Đăng nhập
+                        </Button>
+                    </form>
+
+                    <div className="mt-6 text-center text-sm text-text-light">
+                        Chưa có tài khoản?{' '}
+                        <Link to="/register" className="text-primary font-semibold hover:underline">
+                            Đăng ký ngay
+                        </Link>
+                    </div>
+                </div>
             </div>
         </div>
     )

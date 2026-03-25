@@ -276,7 +276,7 @@ export default function BankSelector({ metadata, sections, setSections }) {
     return (
         <div className="space-y-4">
             {/* ── Auto-generate toolbar ── */}
-            <div className="flex items-center gap-4 rounded-2xl border-2 border-[#E2E8F0] bg-gradient-to-r from-[#EFF6FF] to-white p-4">
+            <div className="flex items-center gap-4 rounded-2xl border-2 border-[#E2E8F0] bg-linear-to-r from-[#EFF6FF] to-white p-4">
                 <div className="flex-1">
                     <h3 className="text-sm font-bold text-[#1E293B]">
                         Tự động tạo đề theo cấu trúc JLPT {metadata.level}
@@ -302,7 +302,7 @@ export default function BankSelector({ metadata, sections, setSections }) {
                     <button
                         onClick={autoGenerateExam}
                         disabled={autoGenerating}
-                        className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] px-4 py-2 text-xs font-bold text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 disabled:opacity-50 cursor-pointer transition-all"
+                        className="flex items-center gap-1.5 rounded-lg bg-linear-to-r from-[#2563EB] to-[#3B82F6] px-4 py-2 text-xs font-bold text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 disabled:opacity-50 cursor-pointer transition-all"
                     >
                         {autoGenerating ? (
                             <Loader2 className="size-4 animate-spin" />

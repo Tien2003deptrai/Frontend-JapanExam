@@ -1,77 +1,131 @@
-import { MySpace } from '@/components'
-import { iconExam } from '@/constants/IconItem'
-import { mockStructures } from '@/mock/structureData'
-import { Clock, Plus, Settings2 } from 'lucide-react'
+import { BookOpen, Clock, Plus, Settings2 } from 'lucide-react'
+
+const STRUCTURES = [
+    {
+        id: 'n5',
+        label: 'JLPT N5',
+        duration: 60,
+        totalQuestions: 60,
+        sections: [
+            { name: 'Từ vựng', count: 20, time: 15 },
+            { name: 'Ngữ pháp', count: 20, time: 20 },
+            { name: 'Đọc hiểu', count: 15, time: 15 },
+            { name: 'Nghe', count: 25, time: 25 },
+        ],
+    },
+    {
+        id: 'n4',
+        label: 'JLPT N4',
+        duration: 70,
+        totalQuestions: 65,
+        sections: [
+            { name: 'Từ vựng', count: 22, time: 15 },
+            { name: 'Ngữ pháp', count: 18, time: 20 },
+            { name: 'Đọc hiểu', count: 15, time: 20 },
+            { name: 'Nghe', count: 28, time: 30 },
+        ],
+    },
+    {
+        id: 'n3',
+        label: 'JLPT N3',
+        duration: 95,
+        totalQuestions: 70,
+        sections: [
+            { name: 'Từ vựng', count: 25, time: 20 },
+            { name: 'Ngữ pháp', count: 20, time: 25 },
+            { name: 'Đọc hiểu', count: 15, time: 25 },
+            { name: 'Nghe', count: 30, time: 35 },
+        ],
+    },
+    {
+        id: 'n2',
+        label: 'JLPT N2',
+        duration: 105,
+        totalQuestions: 75,
+        sections: [
+            { name: 'Từ vựng', count: 25, time: 20 },
+            { name: 'Ngữ pháp', count: 20, time: 25 },
+            { name: 'Đọc hiểu', count: 20, time: 30 },
+            { name: 'Nghe', count: 32, time: 35 },
+        ],
+    },
+    {
+        id: 'n1',
+        label: 'JLPT N1',
+        duration: 110,
+        totalQuestions: 80,
+        sections: [
+            { name: 'Từ vựng', count: 25, time: 20 },
+            { name: 'Ngữ pháp', count: 20, time: 25 },
+            { name: 'Đọc hiểu', count: 25, time: 35 },
+            { name: 'Nghe', count: 35, time: 40 },
+        ],
+    },
+]
 
 export default function AdminExamStructurePage() {
     return (
-        <MySpace>
-            <MySpace.Heading className="bg-white p-5 shadow-sm">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <h1 className="text-xl font-semibold text-gray-900">
-                            Quản lý cấu trúc đề thi
-                        </h1>
-                        <p className="mt-1 text-sm text-gray-500">
-                            Thiết lập thời gian, số câu và các phần thi theo từng level JLPT.
-                        </p>
-                    </div>
-                    <button
-                        type="button"
-                        className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                        <Plus className="size-4" />
-                        Thêm mẫu cấu trúc
-                    </button>
+        <div className="space-y-6">
+            {/* Header */}
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h1 className="font-heading text-2xl font-bold text-text">
+                        Quản lý cấu trúc đề thi
+                    </h1>
+                    <p className="mt-1 text-sm text-text-light">
+                        Thiết lập thời gian, số câu và các phần thi theo từng level JLPT.
+                    </p>
                 </div>
-            </MySpace.Heading>
-            <MySpace.Body>
-                <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2">
-                    {mockStructures.map(structure => (
-                        <div
-                            key={structure.id}
-                            className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md"
-                        >
-                            <div className="flex items-start justify-between gap-3">
-                                <div className="flex items-center gap-3">
-                                    <img src={iconExam} className="w-12 h-12 rounded-xl" />
-                                    <div>
-                                        <h2 className="font-semibold text-gray-900">
-                                            {structure.label}
-                                        </h2>
-                                        <div className="mt-0.5 flex items-center gap-2 text-sm text-gray-500">
-                                            <Clock className="size-4" />
-                                            <span>{structure.duration} phút</span>
-                                            <span className="text-gray-300">•</span>
-                                            <span>{structure.totalQuestions} câu</span>
-                                        </div>
+                <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-primary/90 transition-colors">
+                    <Plus className="size-4" />
+                    Thêm mẫu cấu trúc
+                </button>
+            </div>
+
+            {/* Structure Cards */}
+            <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2">
+                {STRUCTURES.map(structure => (
+                    <div
+                        key={structure.id}
+                        className="rounded-xl border border-border bg-white p-5 shadow-sm transition hover:shadow-md"
+                    >
+                        <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                                <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
+                                    <BookOpen className="size-6 text-primary" />
+                                </div>
+                                <div>
+                                    <h2 className="font-heading font-semibold text-text">
+                                        {structure.label}
+                                    </h2>
+                                    <div className="mt-0.5 flex items-center gap-2 text-sm text-text-light">
+                                        <Clock className="size-4" />
+                                        <span>{structure.duration} phút</span>
+                                        <span className="text-border">•</span>
+                                        <span>{structure.totalQuestions} câu</span>
                                     </div>
                                 </div>
-                                <button
-                                    type="button"
-                                    className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                                    title="Chỉnh sửa"
-                                >
-                                    <Settings2 className="size-5" />
-                                </button>
                             </div>
-                            <ul className="mt-4 space-y-2 border-t border-gray-100 pt-4">
-                                {structure.sections.map((section, i) => (
-                                    <li
-                                        key={i}
-                                        className="flex items-center justify-between text-sm"
-                                    >
-                                        <span className="text-gray-700">{section.name}</span>
-                                        <span className="text-gray-500">
-                                            {section.count} câu · {section.time} phút
-                                        </span>
-                                    </li>
-                                ))}
-                            </ul>
+                            <button
+                                className="rounded-lg p-2 text-text-muted hover:bg-surface hover:text-text transition-colors"
+                                title="Chỉnh sửa"
+                            >
+                                <Settings2 className="size-5" />
+                            </button>
                         </div>
-                    ))}
-                </div>
-            </MySpace.Body>
-        </MySpace>
+                        <ul className="mt-4 space-y-2 border-t border-border pt-4">
+                            {structure.sections.map((section, i) => (
+                                <li key={i} className="flex items-center justify-between text-sm">
+                                    <span className="text-text">{section.name}</span>
+                                    <span className="text-text-muted">
+                                        {section.count} câu · {section.time} phút
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ))}
+            </div>
+        </div>
     )
 }

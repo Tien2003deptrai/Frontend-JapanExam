@@ -43,7 +43,7 @@ export default function QuestionCard({ className, children, data, ...props }) {
             {...props}
         >
             <div className="flex gap-4 p-3">
-                <div className="relative h-[80px] w-[70px] shrink-0 overflow-hidden rounded-md bg-gray-100">
+                <div className="relative h-20 w-17.5 shrink-0 overflow-hidden rounded-md bg-gray-100">
                     {thumbnail ? (
                         <img src={thumbnail} className="h-full w-full object-cover" alt="" />
                     ) : (
