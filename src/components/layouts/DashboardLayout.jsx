@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 
 /**
- * Shared dashboard layout for Teacher & Admin.
+ * Shared dashboard layout for Creator & Admin.
  * @param {object} props
- * @param {string} props.title - e.g. "Giáo viên" or "Quản trị"
- * @param {string} props.basePath - e.g. "/teacher" or "/admin"
+ * @param {string} props.title - e.g. "Người tạo đề" or "Quản trị"
+ * @param {string} props.basePath - e.g. "/creator" or "/admin"
  * @param {Array} props.menuItems - sidebar nav items
  * @param {React.ReactNode} props.children - <Outlet />
  */

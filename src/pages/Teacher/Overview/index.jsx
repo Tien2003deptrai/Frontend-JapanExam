@@ -83,14 +83,14 @@ export default function OverviewPage() {
             value: stats.totalExams,
             icon: ScrollText,
             gradient: 'from-primary to-primary-dark',
-            link: '/teacher/exam',
+            link: '/creator/exam',
         },
         {
             label: 'Ngân hàng câu hỏi',
             value: stats.totalBlocks,
             icon: Layers,
             gradient: 'from-cta to-green-600',
-            link: '/teacher/question',
+            link: '/creator/question',
             suffix: 'blocks',
         },
         {
@@ -189,7 +189,7 @@ export default function OverviewPage() {
                             Đề thi gần đây
                         </h3>
                         <Link
-                            to="/teacher/exam"
+                            to="/creator/exam"
                             className="text-primary text-xs font-semibold hover:underline"
                         >
                             Xem tất cả
@@ -204,7 +204,7 @@ export default function OverviewPage() {
                             stats.recentExams.map(exam => (
                                 <Link
                                     key={exam._id || exam.id}
-                                    to={`/teacher/exam/${exam._id || exam.id}/questions`}
+                                    to={`/creator/exam/${exam._id || exam.id}/questions`}
                                     className="block border-2 border-border p-3 rounded-xl hover:border-primary/50 transition-colors"
                                 >
                                     <div className="flex items-start justify-between gap-2">
@@ -239,7 +239,7 @@ export default function OverviewPage() {
                 <h3 className="text-sm font-bold text-text mb-4">Thao tác nhanh</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <Link
-                        to="/teacher/exam/create"
+                        to="/creator/exam/create"
                         className="flex items-center gap-3 p-4 rounded-xl border-2 border-border hover:border-primary/50 hover:bg-primary/5 transition-all"
                     >
                         <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -251,7 +251,7 @@ export default function OverviewPage() {
                         </div>
                     </Link>
                     <Link
-                        to="/teacher/question"
+                        to="/creator/question"
                         className="flex items-center gap-3 p-4 rounded-xl border-2 border-border hover:border-cta/50 hover:bg-cta/5 transition-all"
                     >
                         <div className="size-10 rounded-lg bg-cta/10 flex items-center justify-center shrink-0">
@@ -263,7 +263,7 @@ export default function OverviewPage() {
                         </div>
                     </Link>
                     <Link
-                        to="/teacher/exam"
+                        to="/creator/exam"
                         className="flex items-center gap-3 p-4 rounded-xl border-2 border-border hover:border-orange-400/50 hover:bg-orange-50 transition-all"
                     >
                         <div className="size-10 rounded-lg bg-orange-100 flex items-center justify-center shrink-0">

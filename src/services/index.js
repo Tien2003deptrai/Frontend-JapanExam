@@ -1,3 +1,5 @@
+export { adminService } from './AdminService'
+export { aiService } from './AiService'
 export { authService } from './AuthService'
 export { examAttemptService } from './ExamAttemptService'
 export { examFeedbackService } from './ExamFeedbackService'

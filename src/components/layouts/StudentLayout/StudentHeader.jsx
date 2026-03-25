@@ -1,6 +1,6 @@
 import Button from '@/components/ui/Button'
 import useAuthStore from '@/stores/authStore'
-import { ChevronDown, LogOut, Menu, X } from 'lucide-react'
+import { ChevronDown, LogOut, Menu, User, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 
@@ -87,6 +87,14 @@ export default function StudentHeader() {
                                             </p>
                                             <p className="text-xs text-text-muted">{user?.email}</p>
                                         </div>
+                                        <Link
+                                            to="/profile"
+                                            onClick={() => setUserMenuOpen(false)}
+                                            className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-text hover:bg-background transition-colors"
+                                        >
+                                            <User className="size-4" />
+                                            Trang cá nhân
+                                        </Link>
                                         <button
                                             type="button"
                                             onClick={handleLogout}

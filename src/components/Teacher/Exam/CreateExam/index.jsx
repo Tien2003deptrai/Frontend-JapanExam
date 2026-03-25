@@ -71,7 +71,7 @@ export default function CreateExamWizard() {
                 payload.status = status
                 const res = await examService.createExam(payload)
                 if (res.success) {
-                    navigate('/teacher/exam')
+                    navigate('/creator/exam')
                 } else {
                     setError(res.message || 'Có lỗi xảy ra khi lưu đề thi')
                 }
@@ -119,7 +119,7 @@ export default function CreateExamWizard() {
             <div className="sticky top-0 z-30 border-b border-[#E2E8F0] bg-white/80 backdrop-blur-md">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
                     <button
-                        onClick={() => navigate('/teacher/exam')}
+                        onClick={() => navigate('/creator/exam')}
                         className="flex items-center gap-2 text-sm font-medium text-[#64748B] transition-colors hover:text-[#1E293B] cursor-pointer"
                     >
                         <ArrowLeft className="size-4" />

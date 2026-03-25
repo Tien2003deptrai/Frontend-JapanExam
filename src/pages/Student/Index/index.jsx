@@ -19,7 +19,7 @@ const features = [
     },
     { icon: Clock, title: 'Giới hạn thời gian', desc: 'Luyện thi với thời gian thực như thi thật' },
     { icon: Award, title: 'Chấm điểm tự động', desc: 'Xem kết quả và giải thích chi tiết ngay' },
-    { icon: Users, title: 'Miễn phí', desc: 'Hoàn toàn miễn phí cho tất cả học viên' },
+    { icon: Users, title: 'Miễn phí', desc: 'Hoàn toàn miễn phí cho tất cả người học' },
 ]
 
 export default function StudentIndexPage() {

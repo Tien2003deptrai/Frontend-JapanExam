@@ -382,7 +382,11 @@ export default function ExamResultPage() {
 
                         <div className="space-y-3">
                             {filteredDetails.map((q, idx) => (
-                                <ReviewItem key={q.questionId || idx} question={q} />
+                                <ReviewItem
+                                    key={q.questionId || idx}
+                                    question={q}
+                                    examId={examId}
+                                />
                             ))}
                         </div>
                     </div>

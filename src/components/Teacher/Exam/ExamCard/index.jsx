@@ -10,7 +10,7 @@ export default function ExamCard({ data, children, className }) {
     const colors = LEVEL_COLORS[data.level] || {}
 
     const handleCardClick = () => {
-        navigate(`/teacher/exam/${data._id || data.id}/questions`)
+        navigate(`/creator/exam/${data._id || data.id}/questions`)
     }
 
     return (

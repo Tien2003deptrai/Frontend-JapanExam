@@ -104,7 +104,7 @@ export default function ExamPage() {
                 <MySpace>
                     <MySpace.Heading className="bg-white p-5 shadow-sm">
                         <ExamHeading
-                            onCreateExam={() => navigate('/teacher/exam/create')}
+                            onCreateExam={() => navigate('/creator/exam/create')}
                             search={search}
                             onSearchChange={setSearch}
                         />
@@ -142,7 +142,7 @@ export default function ExamPage() {
                                             <ExamDropdown
                                                 onView={() =>
                                                     navigate(
-                                                        `/teacher/exam/${exam._id || exam.id}/questions`
+                                                        `/creator/exam/${exam._id || exam.id}/questions`
                                                     )
                                                 }
                                                 onEdit={() => setEditExam(exam)}

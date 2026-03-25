@@ -82,6 +82,15 @@ class ExamAttemptService {
         const response = await this.api.post('/exam-attempts/get-by-id', { attemptId })
         return response.data
     }
+
+    /**
+     * Thống kê profile user (tổng hợp các lần làm đề)
+     * POST /exam-attempts/profile-stats
+     */
+    async getProfileStats() {
+        const response = await this.api.post('/exam-attempts/profile-stats')
+        return response.data
+    }
 }
 
 export const examAttemptService = new ExamAttemptService()

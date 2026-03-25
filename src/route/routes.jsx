@@ -2,6 +2,7 @@ import { AdminLayout, StudentLayout, TeacherLayout } from '@/components'
 import { NotFoundState } from '@/components/ui'
 import {
     AdminExamStructurePage,
+    AdminExamsPage,
     AdminOverviewPage,
     AdminStudentsPage,
     AdminTeachersPage,
@@ -13,6 +14,7 @@ import {
     ExamResultPage,
     ExamTakePage,
     OverviewPage,
+    ProfilePage,
     QuestionPage,
     RegisterPage,
     StudentIndexPage,
@@ -30,6 +32,10 @@ export const studentRoutes = [
             { path: 'exam/:examId', element: <ExamDetailPage /> },
             { path: 'exam/:examId/take', element: <ExamTakePage /> },
             { path: 'exam/:examId/result/:attemptId', element: <ExamResultPage /> },
+            {
+                path: 'profile',
+                element: <ProtectedRoute element={<ProfilePage />} allowedRoles={[]} />,
+            },
         ],
     },
 ]
@@ -45,10 +51,10 @@ export const publicRoutes = [
     },
 ]
 
-export const teacherRoutes = [
+export const creatorRoutes = [
     {
-        path: '/teacher',
-        element: <ProtectedRoute element={<TeacherLayout />} allowedRoles={['teacher', 'admin']} />,
+        path: '/creator',
+        element: <ProtectedRoute element={<TeacherLayout />} allowedRoles={['creator', 'admin']} />,
         children: [
             { index: true, element: <OverviewPage /> },
             { path: 'question', element: <QuestionPage /> },
@@ -65,8 +71,9 @@ export const adminRoutes = [
         element: <ProtectedRoute element={<AdminLayout />} allowedRoles={['admin']} />,
         children: [
             { index: true, element: <AdminOverviewPage /> },
-            { path: 'teachers', element: <AdminTeachersPage /> },
-            { path: 'students', element: <AdminStudentsPage /> },
+            { path: 'creators', element: <AdminTeachersPage /> },
+            { path: 'learners', element: <AdminStudentsPage /> },
+            { path: 'exams', element: <AdminExamsPage /> },
             { path: 'exam-structure', element: <AdminExamStructurePage /> },
         ],
     },

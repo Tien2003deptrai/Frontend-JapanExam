@@ -24,7 +24,7 @@ export default function LoginPage() {
             toast.success('Đăng nhập thành công!')
             const role = data.data.user?.role
             if (role === 'admin') navigate('/admin', { replace: true })
-            else if (role === 'teacher') navigate('/teacher', { replace: true })
+            else if (role === 'creator') navigate('/creator', { replace: true })
             else navigate('/', { replace: true })
         } catch (err) {
             setError(err.response?.data?.message || 'Đăng nhập thất bại')

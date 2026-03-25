@@ -277,7 +277,7 @@ export default function EditExamMetadataModal({ isOpen, onClose, exam, onSuccess
                         <div>
                             <p className="text-sm font-semibold text-[#1E293B]">Công khai</p>
                             <p className="text-xs text-[#64748B]">
-                                Cho phép học sinh xem và làm đề thi này
+                                Cho phép người học xem và làm đề thi này
                             </p>
                         </div>
                     </label>

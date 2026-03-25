@@ -1,4 +1,4 @@
-import { ExamPreview } from '@/components'
+import ExamFeedbackPanel from '@/components/Student/ExamFeedback'
 import EditExamMetadataModal from '@/components/Teacher/Exam/EditExamMetadataModal'
 import AddQuestionToExamModal from '@/components/Teacher/ExamQuestion/AddQuestionToExamModal'
 import EditExamQuestionModal from '@/components/Teacher/ExamQuestion/EditExamQuestionModal'
@@ -15,6 +15,7 @@ import {
     FileText,
     Layers,
     Loader2,
+    MessageSquareText,
     PencilLine,
     Plus,
     Trash2,
@@ -44,7 +45,7 @@ export default function ExamQuestionsPage() {
     const [deleteLoading, setDeleteLoading] = useState(false)
 
     // Modal states
-    const [previewOpen, setPreviewOpen] = useState(false)
+    const [feedbackOpen, setFeedbackOpen] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [editMetadataOpen, setEditMetadataOpen] = useState(false)
     const [addQuestionModal, setAddQuestionModal] = useState({
@@ -94,7 +95,7 @@ export default function ExamQuestionsPage() {
             setDeleteLoading(true)
             const response = await examService.deleteExam(examId)
             if (response.success) {
-                navigate('/teacher/exam')
+                navigate('/creator/exam')
             }
         } catch (err) {
             setError(err.response?.data?.message || 'Có lỗi xảy ra khi xóa đề thi')
@@ -188,7 +189,7 @@ export default function ExamQuestionsPage() {
                     {error || 'Không tìm thấy đề thi'}
                 </p>
                 <button
-                    onClick={() => navigate('/teacher/exam')}
+                    onClick={() => navigate('/creator/exam')}
                     className="text-sm font-medium text-primary hover:underline cursor-pointer"
                 >
                     Quay lại danh sách
@@ -196,21 +197,6 @@ export default function ExamQuestionsPage() {
             </div>
         )
     }
-
-    // Build flat questions list for ExamPreview compatibility
-    const flatQuestions =
-        exam.sections?.flatMap(
-            section =>
-                section.blocks?.flatMap(
-                    block =>
-                        block.questions?.map((question, index) => ({
-                            id: question._id || `q-${index}`,
-                            ...question,
-                            sectionType: section.sectionType,
-                            blockId: block._id,
-                        })) || []
-                ) || []
-        ) || []
 
     let globalQuestionNumber = 0
 
@@ -224,7 +210,7 @@ export default function ExamQuestionsPage() {
                         <ol className="inline-flex items-center gap-1 text-sm">
                             <li>
                                 <button
-                                    onClick={() => navigate('/teacher/exam')}
+                                    onClick={() => navigate('/creator/exam')}
                                     className="font-medium text-text-light hover:text-primary transition-colors cursor-pointer"
                                 >
                                     Đề thi
@@ -284,11 +270,16 @@ export default function ExamQuestionsPage() {
                                 Chỉnh sửa
                             </button>
                             <button
-                                onClick={() => setPreviewOpen(true)}
-                                className="inline-flex items-center gap-2 h-10 px-4 text-sm font-semibold text-text-light bg-white border-2 border-border rounded-xl hover:bg-background transition-colors cursor-pointer"
+                                onClick={() => setFeedbackOpen(prev => !prev)}
+                                className={cn(
+                                    'inline-flex items-center gap-2 h-10 px-4 text-sm font-semibold rounded-xl transition-colors cursor-pointer',
+                                    feedbackOpen
+                                        ? 'text-white bg-primary border-2 border-primary'
+                                        : 'text-text-light bg-white border-2 border-border hover:bg-background'
+                                )}
                             >
-                                <Eye className="size-4" />
-                                Xem trước
+                                <MessageSquareText className="size-4" />
+                                Thảo luận & Đánh giá
                             </button>
                             <button
                                 onClick={() => setShowDeleteModal(true)}
@@ -537,6 +528,13 @@ export default function ExamQuestionsPage() {
                 )}
             </div>
 
+            {/* ── Thảo luận & Đánh giá ── */}
+            {feedbackOpen && (
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+                    <ExamFeedbackPanel examId={examId} />
+                </div>
+            )}
+
             {/* ── Modals ── */}
 
             {/* Delete confirmation */}
@@ -548,14 +546,6 @@ export default function ExamQuestionsPage() {
                     onCancel={() => setShowDeleteModal(false)}
                 />
             )}
-
-            {/* Exam preview */}
-            <ExamPreview
-                isOpen={previewOpen}
-                onClose={() => setPreviewOpen(false)}
-                exam={exam}
-                questions={flatQuestions}
-            />
 
             {/* Add questions modal */}
             <AddQuestionToExamModal
