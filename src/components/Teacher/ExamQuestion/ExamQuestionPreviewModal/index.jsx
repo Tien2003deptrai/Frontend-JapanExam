@@ -251,9 +251,10 @@ export default function ExamQuestionPreviewModal({
                                     <span className="text-xs font-bold text-[#475569] uppercase tracking-wider">
                                         Giải thích
                                     </span>
-                                    <p className="mt-1 text-sm text-[#64748B] leading-relaxed whitespace-pre-wrap">
-                                        {question.explanation}
-                                    </p>
+                                    <div
+                                        className="mt-1 text-sm text-[#64748B] leading-relaxed whitespace-pre-wrap [&_b]:font-bold [&_br]:block"
+                                        dangerouslySetInnerHTML={{ __html: question.explanation }}
+                                    />
                                 </div>
                             )}
                             {question.translationVi && (

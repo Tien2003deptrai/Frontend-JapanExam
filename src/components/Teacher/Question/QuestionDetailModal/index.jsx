@@ -496,9 +496,12 @@ export default function QuestionDetailModal({
                                                                 <span className="text-xs font-bold text-[#475569]">
                                                                     Giải thích:
                                                                 </span>
-                                                                <p className="mt-0.5 text-sm text-[#64748B] whitespace-pre-wrap">
-                                                                    {q.explanation}
-                                                                </p>
+                                                                <div
+                                                                    className="mt-0.5 text-sm text-[#64748B] whitespace-pre-wrap [&_b]:font-bold [&_br]:block"
+                                                                    dangerouslySetInnerHTML={{
+                                                                        __html: q.explanation,
+                                                                    }}
+                                                                />
                                                             </div>
                                                         )}
                                                         {q.translationVi && (

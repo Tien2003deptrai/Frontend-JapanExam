@@ -105,7 +105,8 @@ export default function QuestionDisplayCard({ className, children, data, ...prop
                 {data?.explanation && (
                     <div className="mt-2 pt-2 border-t border-gray-100">
                         <p className="text-xs text-gray-600 line-clamp-1">
-                            <span className="font-medium">Giải thích:</span> {data.explanation}
+                            <span className="font-medium">Giải thích:</span>{' '}
+                            <span dangerouslySetInnerHTML={{ __html: data.explanation }} />
                         </p>
                     </div>
                 )}

@@ -170,9 +170,10 @@ export default function ReviewItem({ question, examId }) {
                                     </span>
                                 )}
                             </p>
-                            <p className="text-xs text-primary-dark whitespace-pre-line">
-                                {explanation}
-                            </p>
+                            <div
+                                className="text-xs text-primary-dark whitespace-pre-line prose prose-xs prose-cyan max-w-none [&_b]:font-bold [&_br]:block"
+                                dangerouslySetInnerHTML={{ __html: explanation }}
+                            />
                         </div>
                     ) : (
                         <button
