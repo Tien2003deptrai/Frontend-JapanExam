@@ -1,7 +1,8 @@
 import ExamFeedbackPanel from '@/components/Student/ExamFeedback'
 import { Badge, ErrorState, LoadingPage } from '@/components/ui'
 import { cn } from '@/lib/utils'
-import { examAttemptService } from '@/services'
+import { bookmarkService, examAttemptService } from '@/services'
+import useAuthStore from '@/stores/authStore'
 import {
     AlertTriangle,
     ArrowLeft,
@@ -35,13 +36,15 @@ export default function ExamResultPage() {
     const location = useLocation()
     const navigate = useNavigate()
     const isPractice = attemptId === 'practice'
+    const { isAuthenticated } = useAuthStore()
 
     const [resultData, setResultData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [showReview, setShowReview] = useState(false)
+    const [showReview, setShowReview] = useState(true)
     const [filterSection, setFilterSection] = useState('all')
     const [filterStatus, setFilterStatus] = useState('all')
+    const [bookmarkedIds, setBookmarkedIds] = useState(new Set())
 
     useEffect(() => {
         const loadResult = async () => {
@@ -90,6 +93,17 @@ export default function ExamResultPage() {
     const summary = resultData?.summary
     const detailedResults = useMemo(() => resultData?.detailedResults || [], [resultData])
     const exam = resultData?.exam
+
+    // Load bookmarked question IDs
+    useEffect(() => {
+        if (!isAuthenticated || detailedResults.length === 0) return
+        const qIds = detailedResults.map(r => r.questionId).filter(Boolean)
+        if (qIds.length === 0) return
+        bookmarkService
+            .checkBookmarks(qIds)
+            .then(res => setBookmarkedIds(new Set(res.data?.bookmarkedIds || [])))
+            .catch(() => {})
+    }, [isAuthenticated, detailedResults])
 
     const filteredDetails = useMemo(() => {
         let results = detailedResults
@@ -386,6 +400,7 @@ export default function ExamResultPage() {
                                     key={q.questionId || idx}
                                     question={q}
                                     examId={examId}
+                                    isBookmarked={bookmarkedIds.has(q.questionId)}
                                 />
                             ))}
                         </div>

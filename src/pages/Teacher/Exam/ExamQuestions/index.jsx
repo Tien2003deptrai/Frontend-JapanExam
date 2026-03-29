@@ -567,6 +567,7 @@ export default function ExamQuestionsPage() {
                 questionNumber={previewQuestion?.questionNumber}
                 sectionType={previewQuestion?.sectionType}
                 blockContext={previewQuestion?.blockContext}
+                examLevel={exam?.level}
                 onEdit={handleEditFromPreview}
             />
 

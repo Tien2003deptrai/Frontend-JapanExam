@@ -14,6 +14,7 @@ class AiService {
         level,
         sectionType,
         context,
+        questionId,
     }) {
         const response = await this.api.post('/questions/ai-explain', {
             questionText,
@@ -22,6 +23,7 @@ class AiService {
             level,
             sectionType,
             context,
+            questionId,
         })
         return response.data
     }

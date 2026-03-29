@@ -5,48 +5,48 @@ import { useEffect, useState } from 'react'
 
 const STRUCTURES = [
     {
-        id: 'N5', label: 'JLPT N5', duration: 60, totalQuestions: 60, color: 'from-sky-500 to-cyan-400',
+        id: 'N5', label: 'JLPT N5', duration: 105, totalQuestions: 95, color: 'from-sky-500 to-cyan-400',
         sections: [
-            { name: 'Từ vựng', key: 'vocabulary', count: 20, time: 15 },
-            { name: 'Ngữ pháp', key: 'grammar', count: 20, time: 20 },
-            { name: 'Đọc hiểu', key: 'reading', count: 15, time: 15 },
-            { name: 'Nghe', key: 'listening', count: 25, time: 25 },
+            { name: 'Từ vựng', key: 'vocabulary', count: 30, time: 30 },
+            { name: 'Ngữ pháp', key: 'grammar', count: 25, time: 25 },
+            { name: 'Đọc hiểu', key: 'reading', count: 10, time: 20 },
+            { name: 'Nghe', key: 'listening', count: 30, time: 30 },
         ],
     },
     {
-        id: 'N4', label: 'JLPT N4', duration: 70, totalQuestions: 65, color: 'from-emerald-500 to-teal-400',
+        id: 'N4', label: 'JLPT N4', duration: 125, totalQuestions: 100, color: 'from-emerald-500 to-teal-400',
         sections: [
-            { name: 'Từ vựng', key: 'vocabulary', count: 22, time: 15 },
-            { name: 'Ngữ pháp', key: 'grammar', count: 18, time: 20 },
-            { name: 'Đọc hiểu', key: 'reading', count: 15, time: 20 },
-            { name: 'Nghe', key: 'listening', count: 28, time: 30 },
-        ],
-    },
-    {
-        id: 'N3', label: 'JLPT N3', duration: 95, totalQuestions: 70, color: 'from-violet-500 to-purple-400',
-        sections: [
-            { name: 'Từ vựng', key: 'vocabulary', count: 25, time: 20 },
-            { name: 'Ngữ pháp', key: 'grammar', count: 20, time: 25 },
-            { name: 'Đọc hiểu', key: 'reading', count: 15, time: 25 },
+            { name: 'Từ vựng', key: 'vocabulary', count: 30, time: 30 },
+            { name: 'Ngữ pháp', key: 'grammar', count: 25, time: 30 },
+            { name: 'Đọc hiểu', key: 'reading', count: 15, time: 30 },
             { name: 'Nghe', key: 'listening', count: 30, time: 35 },
         ],
     },
     {
-        id: 'N2', label: 'JLPT N2', duration: 105, totalQuestions: 75, color: 'from-amber-500 to-orange-400',
+        id: 'N3', label: 'JLPT N3', duration: 140, totalQuestions: 105, color: 'from-violet-500 to-purple-400',
         sections: [
-            { name: 'Từ vựng', key: 'vocabulary', count: 25, time: 20 },
-            { name: 'Ngữ pháp', key: 'grammar', count: 20, time: 25 },
-            { name: 'Đọc hiểu', key: 'reading', count: 20, time: 30 },
-            { name: 'Nghe', key: 'listening', count: 32, time: 35 },
+            { name: 'Từ vựng', key: 'vocabulary', count: 35, time: 30 },
+            { name: 'Ngữ pháp', key: 'grammar', count: 25, time: 35 },
+            { name: 'Đọc hiểu', key: 'reading', count: 15, time: 35 },
+            { name: 'Nghe', key: 'listening', count: 30, time: 40 },
         ],
     },
     {
-        id: 'N1', label: 'JLPT N1', duration: 110, totalQuestions: 80, color: 'from-rose-500 to-pink-400',
+        id: 'N2', label: 'JLPT N2', duration: 155, totalQuestions: 107, color: 'from-amber-500 to-orange-400',
         sections: [
-            { name: 'Từ vựng', key: 'vocabulary', count: 25, time: 20 },
-            { name: 'Ngữ pháp', key: 'grammar', count: 20, time: 25 },
-            { name: 'Đọc hiểu', key: 'reading', count: 25, time: 35 },
-            { name: 'Nghe', key: 'listening', count: 35, time: 40 },
+            { name: 'Từ vựng', key: 'vocabulary', count: 32, time: 30 },
+            { name: 'Ngữ pháp', key: 'grammar', count: 22, time: 35 },
+            { name: 'Đọc hiểu', key: 'reading', count: 20, time: 40 },
+            { name: 'Nghe', key: 'listening', count: 33, time: 50 },
+        ],
+    },
+    {
+        id: 'N1', label: 'JLPT N1', duration: 170, totalQuestions: 103, color: 'from-rose-500 to-pink-400',
+        sections: [
+            { name: 'Từ vựng', key: 'vocabulary', count: 25, time: 25 },
+            { name: 'Ngữ pháp', key: 'grammar', count: 20, time: 35 },
+            { name: 'Đọc hiểu', key: 'reading', count: 25, time: 50 },
+            { name: 'Nghe', key: 'listening', count: 33, time: 60 },
         ],
     },
 ]
@@ -93,7 +93,7 @@ export default function AdminExamStructurePage() {
                     return (
                         <div key={structure.id} className="group rounded-2xl border border-border bg-white shadow-sm overflow-hidden transition hover:shadow-md">
                             {/* Header with gradient */}
-                            <div className={`relative bg-gradient-to-r ${structure.color} px-6 py-4`}>
+                            <div className={`relative bg-linear-to-r ${structure.color} px-6 py-4`}>
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <h2 className="text-xl font-bold text-white">{structure.label}</h2>
@@ -125,7 +125,7 @@ export default function AdminExamStructurePage() {
                                                     <span className="text-text-muted">{section.count} câu · {section.time} phút</span>
                                                 </div>
                                                 <div className="mt-1.5 h-1.5 w-full rounded-full bg-surface overflow-hidden">
-                                                    <div className={`h-full rounded-full bg-gradient-to-r ${structure.color}`} style={{ width: `${pct}%` }} />
+                                                    <div className={`h-full rounded-full bg-linear-to-r ${structure.color}`} style={{ width: `${pct}%` }} />
                                                 </div>
                                             </div>
                                         </div>

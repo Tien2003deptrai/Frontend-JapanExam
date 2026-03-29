@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { Flag } from 'lucide-react'
+import { Bookmark, BookmarkCheck, Flag } from 'lucide-react'
 
 export default function QuestionItem({
     innerRef,
@@ -7,8 +7,10 @@ export default function QuestionItem({
     index,
     selectedAnswer,
     isFlagged,
+    isBookmarked,
     onAnswer,
     onFlag,
+    onToggleBookmark,
 }) {
     const q = question
 
@@ -25,7 +27,7 @@ export default function QuestionItem({
                 <p className="text-xs text-text-muted italic mb-2">{q.blockInstruction}</p>
             )}
 
-            {/* Question text + flag */}
+            {/* Question text + actions */}
             <div className="flex items-start justify-between gap-2 mb-3">
                 <p className="text-sm font-medium text-text">
                     <span className="inline-flex items-center justify-center size-6 rounded-full bg-primary/10 text-primary text-xs font-bold mr-2 shrink-0">
@@ -33,19 +35,40 @@ export default function QuestionItem({
                     </span>
                     {q.questionText}
                 </p>
-                <button
-                    type="button"
-                    onClick={onFlag}
-                    title={isFlagged ? 'Bỏ đánh dấu' : 'Đánh dấu câu này'}
-                    className={cn(
-                        'shrink-0 size-7 rounded-md flex items-center justify-center transition-colors cursor-pointer',
-                        isFlagged
-                            ? 'bg-orange-500/10 text-orange-500'
-                            : 'text-border hover:text-orange-500 hover:bg-orange-500/5'
+                <div className="flex items-center gap-0.5 shrink-0">
+                    {onToggleBookmark && (
+                        <button
+                            type="button"
+                            onClick={onToggleBookmark}
+                            title={isBookmarked ? 'Bỏ lưu câu hỏi' : 'Lưu câu hỏi'}
+                            className={cn(
+                                'size-7 rounded-md flex items-center justify-center transition-colors cursor-pointer',
+                                isBookmarked
+                                    ? 'bg-amber-500/10 text-amber-500'
+                                    : 'text-border hover:text-amber-500 hover:bg-amber-500/5'
+                            )}
+                        >
+                            {isBookmarked ? (
+                                <BookmarkCheck className="size-3.5" />
+                            ) : (
+                                <Bookmark className="size-3.5" />
+                            )}
+                        </button>
                     )}
-                >
-                    <Flag className="size-3.5" />
-                </button>
+                    <button
+                        type="button"
+                        onClick={onFlag}
+                        title={isFlagged ? 'Bỏ đánh dấu' : 'Đánh dấu câu này'}
+                        className={cn(
+                            'size-7 rounded-md flex items-center justify-center transition-colors cursor-pointer',
+                            isFlagged
+                                ? 'bg-orange-500/10 text-orange-500'
+                                : 'text-border hover:text-orange-500 hover:bg-orange-500/5'
+                        )}
+                    >
+                        <Flag className="size-3.5" />
+                    </button>
+                </div>
             </div>
 
             {/* Options */}

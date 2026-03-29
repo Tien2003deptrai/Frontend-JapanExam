@@ -1,10 +1,27 @@
 import Button from '@/components/ui/Button'
 import useAuthStore from '@/stores/authStore'
-import { ChevronDown, LogOut, Menu, User, X } from 'lucide-react'
+import {
+    Bookmark,
+    ChevronDown,
+    Lightbulb,
+    LogOut,
+    Menu,
+    RefreshCw,
+    Trophy,
+    User,
+    X,
+} from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 
 const navLinks = [{ path: '/', label: 'Trang chủ', end: true }]
+
+const authNavLinks = [
+    { path: '/leaderboard', label: 'Xếp hạng', icon: Trophy },
+    { path: '/wrong-questions', label: 'Câu sai', icon: RefreshCw },
+    { path: '/bookmarks', label: 'Đã lưu', icon: Bookmark },
+    { path: '/recommendations', label: 'Gợi ý', icon: Lightbulb },
+]
 
 export default function StudentHeader() {
     const [mobileOpen, setMobileOpen] = useState(false)
@@ -58,6 +75,23 @@ export default function StudentHeader() {
                                 {link.label}
                             </NavLink>
                         ))}
+                        {isAuthenticated &&
+                            authNavLinks.map(link => (
+                                <NavLink
+                                    key={link.path}
+                                    to={link.path}
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                            isActive
+                                                ? 'text-primary bg-primary/5'
+                                                : 'text-text-light hover:text-text hover:bg-background'
+                                        }`
+                                    }
+                                >
+                                    <link.icon className="size-3.5" />
+                                    {link.label}
+                                </NavLink>
+                            ))}
                     </nav>
 
                     {/* Right section */}
@@ -151,6 +185,24 @@ export default function StudentHeader() {
                                 {link.label}
                             </NavLink>
                         ))}
+                        {isAuthenticated &&
+                            authNavLinks.map(link => (
+                                <NavLink
+                                    key={link.path}
+                                    to={link.path}
+                                    onClick={() => setMobileOpen(false)}
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                                            isActive
+                                                ? 'text-primary bg-primary/5'
+                                                : 'text-text-light hover:bg-background'
+                                        }`
+                                    }
+                                >
+                                    <link.icon className="size-4" />
+                                    {link.label}
+                                </NavLink>
+                            ))}
                         {!isAuthenticated && (
                             <div className="flex gap-2 pt-2 px-4">
                                 <Link to="/login" className="flex-1">

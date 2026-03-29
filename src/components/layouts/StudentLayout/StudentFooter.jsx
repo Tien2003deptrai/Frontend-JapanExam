@@ -1,7 +1,11 @@
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-const footerLinks = [{ path: '/', label: 'Trang chủ' }]
+const footerLinks = [
+    { path: '/', label: 'Trang chủ' },
+    { path: '/leaderboard', label: 'Xếp hạng' },
+    { path: '/recommendations', label: 'Gợi ý bài thi' },
+]
 
 export default function StudentFooter() {
     return (

@@ -91,6 +91,33 @@ class ExamAttemptService {
         const response = await this.api.post('/exam-attempts/profile-stats')
         return response.data
     }
+
+    /**
+     * Lấy câu sai từ các lần thi gần đây
+     * POST /exam-attempts/wrong-questions
+     */
+    async getWrongQuestions() {
+        const response = await this.api.post('/exam-attempts/wrong-questions')
+        return response.data
+    }
+
+    /**
+     * Leaderboard
+     * POST /exam-attempts/leaderboard
+     */
+    async getLeaderboard({ period, level, limit } = {}) {
+        const response = await this.api.post('/exam-attempts/leaderboard', { period, level, limit })
+        return response.data
+    }
+
+    /**
+     * Gợi ý bài thi phù hợp
+     * POST /exam-attempts/recommendations
+     */
+    async getRecommendations() {
+        const response = await this.api.post('/exam-attempts/recommendations')
+        return response.data
+    }
 }
 
 export const examAttemptService = new ExamAttemptService()

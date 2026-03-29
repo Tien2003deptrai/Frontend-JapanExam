@@ -1,5 +1,16 @@
 import { cn } from '@/lib/utils'
-import { BookOpen, CheckCircle2, Edit3, FileText, Image, Music, X } from 'lucide-react'
+import { aiService } from '@/services'
+import {
+    BookOpen,
+    CheckCircle2,
+    Edit3,
+    FileText,
+    Image,
+    Loader2,
+    Music,
+    Sparkles,
+    X,
+} from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -29,10 +40,20 @@ export default function ExamQuestionPreviewModal({
     questionNumber,
     sectionType,
     blockContext,
+    examLevel,
     onEdit,
 }) {
     const [animateIn, setAnimateIn] = useState(false)
+    const [aiLoading, setAiLoading] = useState(false)
+    const [aiError, setAiError] = useState(null)
+    const [localQuestion, setLocalQuestion] = useState(question)
     const overlayRef = useRef(null)
+
+    // Sync localQuestion when question prop changes
+    useEffect(() => {
+        setLocalQuestion(question)
+        setAiError(null)
+    }, [question])
 
     useEffect(() => {
         if (isOpen) {
@@ -59,6 +80,33 @@ export default function ExamQuestionPreviewModal({
     }, [isOpen])
 
     if (!isOpen || !question) return null
+
+    const q = localQuestion || question
+
+    const handleAiExplain = async () => {
+        setAiLoading(true)
+        setAiError(null)
+        try {
+            const res = await aiService.generateExplanation({
+                questionText: q.questionText,
+                options: q.options,
+                correctAnswer: q.correctAnswer,
+                level: examLevel,
+                sectionType,
+                context: blockContext?.text || '',
+            })
+            const data = res?.data || res
+            setLocalQuestion(prev => ({
+                ...prev,
+                explanation: data.explanation,
+                translationVi: data.translationVi,
+            }))
+        } catch {
+            setAiError('Không thể tạo giải thích')
+        } finally {
+            setAiLoading(false)
+        }
+    }
 
     const handleOverlayClick = e => {
         if (e.target === overlayRef.current) onClose?.()
@@ -177,22 +225,22 @@ export default function ExamQuestionPreviewModal({
                     {/* Question text */}
                     <div className="rounded-2xl border-2 border-[#E2E8F0] bg-[#F8FAFC] p-5">
                         <p className="text-base leading-relaxed text-[#1E293B] font-medium whitespace-pre-wrap">
-                            {question.questionText}
+                            {q.questionText}
                         </p>
                     </div>
 
                     {/* Media */}
-                    {(question.media?.image || question.media?.audio) && (
+                    {(q.media?.image || q.media?.audio) && (
                         <div className="flex flex-wrap items-center gap-3">
-                            {question.media.image && (
+                            {q.media.image && (
                                 <img
-                                    src={question.media.image}
+                                    src={q.media.image}
                                     alt="question media"
                                     className="max-h-48 rounded-xl object-contain border-2 border-[#E2E8F0]"
                                 />
                             )}
-                            {question.media.audio && (
-                                <audio src={question.media.audio} controls className="h-9" />
+                            {q.media.audio && (
+                                <audio src={q.media.audio} controls className="h-9" />
                             )}
                         </div>
                     )}
@@ -201,8 +249,8 @@ export default function ExamQuestionPreviewModal({
                     <div className="space-y-2.5">
                         <h4 className="text-sm font-bold text-[#475569]">Các đáp án</h4>
                         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                            {question.options?.map(opt => {
-                                const isCorrect = opt.label === question.correctAnswer
+                            {q.options?.map(opt => {
+                                const isCorrect = opt.label === q.correctAnswer
                                 return (
                                     <div
                                         key={opt.label}
@@ -244,29 +292,51 @@ export default function ExamQuestionPreviewModal({
                     </div>
 
                     {/* Explanation & Translation */}
-                    {(question.explanation || question.translationVi) && (
+                    {q.explanation || q.translationVi ? (
                         <div className="space-y-3 rounded-2xl bg-[#F8FAFC] p-4 border-2 border-[#E2E8F0]">
-                            {question.explanation && (
+                            {q.explanation && (
                                 <div>
                                     <span className="text-xs font-bold text-[#475569] uppercase tracking-wider">
                                         Giải thích
                                     </span>
                                     <div
                                         className="mt-1 text-sm text-[#64748B] leading-relaxed whitespace-pre-wrap [&_b]:font-bold [&_br]:block"
-                                        dangerouslySetInnerHTML={{ __html: question.explanation }}
+                                        dangerouslySetInnerHTML={{ __html: q.explanation }}
                                     />
                                 </div>
                             )}
-                            {question.translationVi && (
+                            {q.translationVi && (
                                 <div>
                                     <span className="text-xs font-bold text-[#475569] uppercase tracking-wider">
                                         Dịch tiếng Việt
                                     </span>
                                     <p className="mt-1 text-sm text-[#64748B] leading-relaxed">
-                                        {question.translationVi}
+                                        {q.translationVi}
                                     </p>
                                 </div>
                             )}
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={handleAiExplain}
+                                disabled={aiLoading}
+                                className={cn(
+                                    'inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer',
+                                    'bg-linear-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600',
+                                    'shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:shadow-[0_4px_12px_rgba(139,92,246,0.35)]',
+                                    'disabled:opacity-50 disabled:cursor-not-allowed'
+                                )}
+                            >
+                                {aiLoading ? (
+                                    <Loader2 className="size-3.5 animate-spin" />
+                                ) : (
+                                    <Sparkles className="size-3.5" />
+                                )}
+                                {aiLoading ? 'Đang tạo giải thích...' : 'AI giải thích'}
+                            </button>
+                            {aiError && <span className="text-xs text-red-500">{aiError}</span>}
                         </div>
                     )}
                 </div>

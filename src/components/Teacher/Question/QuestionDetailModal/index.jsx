@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { aiService } from '@/services'
 import { questionBlockService } from '@/services/QuestionBlockService'
 import useAuthStore from '@/stores/authStore'
 import {
@@ -11,6 +12,7 @@ import {
     Image,
     Loader2,
     Music,
+    Sparkles,
     Trash2,
     X,
 } from 'lucide-react'
@@ -51,6 +53,7 @@ export default function QuestionDetailModal({
     const [loading, setLoading] = useState(false)
     const [animateIn, setAnimateIn] = useState(false)
     const [expandedQuestions, setExpandedQuestions] = useState({})
+    const [aiStates, setAiStates] = useState({}) // { [questionId]: { loading, explanation, translationVi, error } }
     const overlayRef = useRef(null)
     const user = useAuthStore(s => s.user)
 
@@ -137,6 +140,42 @@ export default function QuestionDetailModal({
     const handleEditQuestion = (questionData, blockId) => {
         onEdit?.(questionData, blockId)
         onClose()
+    }
+
+    const handleAiExplain = async q => {
+        const qId = q._id
+        setAiStates(prev => ({ ...prev, [qId]: { loading: true } }))
+        try {
+            const res = await aiService.generateExplanation({
+                questionText: q.questionText,
+                options: q.options,
+                correctAnswer: q.correctAnswer,
+                level: block?.level,
+                sectionType: block?.section,
+                context: block?.context?.text || '',
+                questionId: qId,
+            })
+            const data = res?.data || res
+            // Update block state so explanation persists
+            setBlock(prev => ({
+                ...prev,
+                questions: prev.questions.map(qq =>
+                    qq._id === qId
+                        ? {
+                              ...qq,
+                              explanation: data.explanation,
+                              translationVi: data.translationVi,
+                          }
+                        : qq
+                ),
+            }))
+            setAiStates(prev => ({ ...prev, [qId]: { loading: false, done: true } }))
+        } catch (err) {
+            setAiStates(prev => ({
+                ...prev,
+                [qId]: { loading: false, error: 'Không thể tạo giải thích' },
+            }))
+        }
     }
 
     const toggleQuestion = idx => setExpandedQuestions(prev => ({ ...prev, [idx]: !prev[idx] }))
@@ -489,7 +528,7 @@ export default function QuestionDetailModal({
                                                 </div>
 
                                                 {/* Explanation & translation */}
-                                                {(q.explanation || q.translationVi) && (
+                                                {q.explanation || q.translationVi ? (
                                                     <div className="space-y-2 rounded-xl bg-[#F8FAFC] p-3 border border-[#E2E8F0]">
                                                         {q.explanation && (
                                                             <div>
@@ -513,6 +552,37 @@ export default function QuestionDetailModal({
                                                                     {q.translationVi}
                                                                 </p>
                                                             </div>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-2">
+                                                        <button
+                                                            type="button"
+                                                            onClick={e => {
+                                                                e.stopPropagation()
+                                                                handleAiExplain(q)
+                                                            }}
+                                                            disabled={aiStates[q._id]?.loading}
+                                                            className={cn(
+                                                                'inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer',
+                                                                'bg-linear-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600',
+                                                                'shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:shadow-[0_4px_12px_rgba(139,92,246,0.35)]',
+                                                                'disabled:opacity-50 disabled:cursor-not-allowed'
+                                                            )}
+                                                        >
+                                                            {aiStates[q._id]?.loading ? (
+                                                                <Loader2 className="size-3.5 animate-spin" />
+                                                            ) : (
+                                                                <Sparkles className="size-3.5" />
+                                                            )}
+                                                            {aiStates[q._id]?.loading
+                                                                ? 'Đang tạo...'
+                                                                : 'AI giải thích'}
+                                                        </button>
+                                                        {aiStates[q._id]?.error && (
+                                                            <span className="text-xs text-red-500">
+                                                                {aiStates[q._id].error}
+                                                            </span>
                                                         )}
                                                     </div>
                                                 )}

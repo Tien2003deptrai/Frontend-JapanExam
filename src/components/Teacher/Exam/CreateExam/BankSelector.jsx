@@ -18,11 +18,11 @@ import { JLPT_SECTIONS } from './constants'
  * Số câu hỏi mục tiêu cho mỗi phần thi
  */
 const JLPT_STRUCTURE = {
-    N5: { vocabulary: 25, grammar: 20, reading: 10, listening: 25 },
-    N4: { vocabulary: 30, grammar: 25, reading: 12, listening: 28 },
-    N3: { vocabulary: 35, grammar: 30, reading: 15, listening: 30 },
-    N2: { vocabulary: 40, grammar: 35, reading: 20, listening: 32 },
-    N1: { vocabulary: 45, grammar: 40, reading: 25, listening: 35 },
+    N5: { vocabulary: 30, grammar: 25, reading: 10, listening: 30 }, // 95 câu, 105 phút
+    N4: { vocabulary: 30, grammar: 25, reading: 15, listening: 30 }, // 100 câu, 125 phút
+    N3: { vocabulary: 35, grammar: 25, reading: 15, listening: 30 }, // 105 câu, 140 phút
+    N2: { vocabulary: 32, grammar: 22, reading: 20, listening: 33 }, // 107 câu, 155 phút
+    N1: { vocabulary: 25, grammar: 20, reading: 25, listening: 33 }, // 103 câu, 170 phút
 }
 
 /**

@@ -1,5 +1,6 @@
 import { Badge, ErrorState, LoadingPage } from '@/components/ui'
-import { examAttemptService } from '@/services'
+import { bookmarkService, examAttemptService } from '@/services'
+import useAuthStore from '@/stores/authStore'
 import { BookOpen, Send } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -17,6 +18,7 @@ export default function ExamTakePage() {
     const { examId } = useParams()
     const location = useLocation()
     const navigate = useNavigate()
+    const { isAuthenticated } = useAuthStore()
 
     const [attempt, setAttempt] = useState(location.state?.attempt || null)
     const [exam, setExam] = useState(location.state?.exam || null)
@@ -26,6 +28,7 @@ export default function ExamTakePage() {
 
     const [answers, setAnswers] = useState({})
     const [flagged, setFlagged] = useState(new Set())
+    const [bookmarkedIds, setBookmarkedIds] = useState(new Set())
     const [secondsLeft, setSecondsLeft] = useState(null)
     const [submitting, setSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
@@ -94,6 +97,47 @@ export default function ExamTakePage() {
         }
         return { questions: qs, sectionMeta: meta }
     }, [exam])
+
+    // Load existing bookmarks
+    useEffect(() => {
+        if (!isAuthenticated || questions.length === 0) return
+        const qIds = questions.map(q => q._qid).filter(Boolean)
+        if (qIds.length === 0) return
+        bookmarkService
+            .checkBookmarks(qIds)
+            .then(res => setBookmarkedIds(new Set(res.data?.bookmarkedIds || [])))
+            .catch(() => {})
+    }, [isAuthenticated, questions])
+
+    const toggleBookmark = useCallback(
+        async (qId, sectionType) => {
+            if (!isAuthenticated || !examId) return
+            const wasBookmarked = bookmarkedIds.has(qId)
+            // Optimistic update
+            setBookmarkedIds(prev => {
+                const next = new Set(prev)
+                if (wasBookmarked) next.delete(qId)
+                else next.add(qId)
+                return next
+            })
+            try {
+                await bookmarkService.toggle({
+                    examId,
+                    questionId: qId,
+                    sectionType: sectionType || 'vocabulary',
+                })
+            } catch {
+                // Revert on error
+                setBookmarkedIds(prev => {
+                    const next = new Set(prev)
+                    if (wasBookmarked) next.add(qId)
+                    else next.delete(qId)
+                    return next
+                })
+            }
+        },
+        [isAuthenticated, examId, bookmarkedIds]
+    )
 
     // Initialize timer with network delay compensation
     useEffect(() => {
@@ -353,8 +397,15 @@ export default function ExamTakePage() {
                                                     index={globalIdx}
                                                     selectedAnswer={answers[qId]}
                                                     isFlagged={flagged.has(qId)}
+                                                    isBookmarked={bookmarkedIds.has(qId)}
                                                     onAnswer={val => onAnswer(qId, val)}
                                                     onFlag={() => toggleFlag(qId)}
+                                                    onToggleBookmark={
+                                                        isAuthenticated
+                                                            ? () =>
+                                                                  toggleBookmark(qId, q.sectionType)
+                                                            : undefined
+                                                    }
                                                 />
                                             )
                                         })
@@ -364,7 +415,7 @@ export default function ExamTakePage() {
                                             return (
                                                 <div
                                                     key={`ctx-${gi}`}
-                                                    className="rounded-xl border-2 border-border/40 bg-gradient-to-b from-primary/[0.02] to-transparent p-4 space-y-4"
+                                                    className="rounded-xl border-2 border-border/40 bg-linear-to-b from-primary/2 to-transparent p-4 space-y-4"
                                                 >
                                                     <div className="rounded-lg bg-background border border-border/50 p-3">
                                                         <p className="text-xs text-text-light whitespace-pre-line">

@@ -1,6 +1,8 @@
 import { cn } from '@/lib/utils'
-import { aiService } from '@/services'
+import { aiService, bookmarkService } from '@/services'
 import {
+    Bookmark,
+    BookmarkCheck,
     Check,
     CheckCircle2,
     ChevronDown,
@@ -12,12 +14,14 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 
-export default function ReviewItem({ question, examId }) {
+export default function ReviewItem({ question, examId, isBookmarked: initialBookmarked = false }) {
     const [expanded, setExpanded] = useState(false)
     const [aiExplanation, setAiExplanation] = useState(null)
     const [aiTranslation, setAiTranslation] = useState(null)
     const [aiLoading, setAiLoading] = useState(false)
     const [aiError, setAiError] = useState(null)
+    const [bookmarked, setBookmarked] = useState(initialBookmarked)
+    const [bookmarkLoading, setBookmarkLoading] = useState(false)
 
     const q = question
     const isCorrect = q.isCorrect
@@ -54,6 +58,24 @@ export default function ReviewItem({ question, examId }) {
         }
     }
 
+    const handleToggleBookmark = async e => {
+        e.stopPropagation()
+        if (!examId || !q.questionId) return
+        setBookmarkLoading(true)
+        try {
+            const res = await bookmarkService.toggle({
+                examId,
+                questionId: q.questionId,
+                sectionType: q.sectionType || 'vocabulary',
+            })
+            setBookmarked(res.data?.bookmarked ?? !bookmarked)
+        } catch {
+            /* ignore */
+        } finally {
+            setBookmarkLoading(false)
+        }
+    }
+
     return (
         <div className={cn('rounded-xl border-2 overflow-hidden transition-colors', statusClass)}>
             {/* Header */}
@@ -78,6 +100,24 @@ export default function ReviewItem({ question, examId }) {
                 </span>
                 <p className="text-sm text-text flex-1 truncate">{q.questionText}</p>
                 <div className="flex items-center gap-2 shrink-0">
+                    <button
+                        type="button"
+                        onClick={handleToggleBookmark}
+                        disabled={bookmarkLoading}
+                        className={cn(
+                            'p-1 rounded-md transition-colors cursor-pointer',
+                            bookmarked
+                                ? 'text-amber-500 hover:text-amber-600'
+                                : 'text-text-muted/40 hover:text-amber-400'
+                        )}
+                        title={bookmarked ? 'Bỏ lưu câu hỏi' : 'Lưu câu hỏi'}
+                    >
+                        {bookmarked ? (
+                            <BookmarkCheck className="size-4" />
+                        ) : (
+                            <Bookmark className="size-4" />
+                        )}
+                    </button>
                     {q.sectionType && (
                         <span className="text-[10px] font-semibold text-text-muted uppercase">
                             {q.sectionType}

@@ -6,6 +6,7 @@ import {
     AdminOverviewPage,
     AdminStudentsPage,
     AdminTeachersPage,
+    BookmarksPage,
     CreateExamPage,
     ExamDetailPage,
     ExamListPage,
@@ -13,11 +14,14 @@ import {
     ExamQuestionsPage,
     ExamResultPage,
     ExamTakePage,
+    LeaderboardPage,
     OverviewPage,
     ProfilePage,
     QuestionPage,
+    RecommendationsPage,
     RegisterPage,
     StudentIndexPage,
+    WrongQuestionsPage,
 } from '@/pages'
 import LoginPage from '@/pages/LoginPage'
 import ProtectedRoute from '@/route/ProtectedRoute'
@@ -35,6 +39,22 @@ export const studentRoutes = [
             {
                 path: 'profile',
                 element: <ProtectedRoute element={<ProfilePage />} allowedRoles={[]} />,
+            },
+            {
+                path: 'leaderboard',
+                element: <ProtectedRoute element={<LeaderboardPage />} allowedRoles={[]} />,
+            },
+            {
+                path: 'wrong-questions',
+                element: <ProtectedRoute element={<WrongQuestionsPage />} allowedRoles={[]} />,
+            },
+            {
+                path: 'bookmarks',
+                element: <ProtectedRoute element={<BookmarksPage />} allowedRoles={[]} />,
+            },
+            {
+                path: 'recommendations',
+                element: <ProtectedRoute element={<RecommendationsPage />} allowedRoles={[]} />,
             },
         ],
     },
