@@ -4,11 +4,11 @@ import { ArrowRight, Award, BookOpen, Clock, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const levelInfo = {
-    N5: { label: 'Sơ cấp', duration: '105 phút', desc: 'Từ vựng · Ngữ pháp · Đọc · Nghe' },
-    N4: { label: 'Sơ trung cấp', duration: '125 phút', desc: 'Từ vựng · Ngữ pháp · Đọc · Nghe' },
-    N3: { label: 'Trung cấp', duration: '125 phút', desc: 'Từ vựng · Ngữ pháp · Đọc · Nghe' },
-    N2: { label: 'Trung cao cấp', duration: '155 phút', desc: 'Từ vựng · Ngữ pháp · Đọc · Nghe' },
-    N1: { label: 'Cao cấp', duration: '170 phút', desc: 'Từ vựng · Ngữ pháp · Đọc · Nghe' },
+    N5: { duration: '105 phút', desc: 'Từ vựng · Ngữ pháp · Đọc · Nghe' },
+    N4: { duration: '125 phút', desc: 'Từ vựng · Ngữ pháp · Đọc · Nghe' },
+    N3: { duration: '125 phút', desc: 'Từ vựng · Ngữ pháp · Đọc · Nghe' },
+    N2: { duration: '155 phút', desc: 'Từ vựng · Ngữ pháp · Đọc · Nghe' },
+    N1: { duration: '170 phút', desc: 'Từ vựng · Ngữ pháp · Đọc · Nghe' },
 }
 
 const features = [
@@ -99,7 +99,7 @@ export default function StudentIndexPage() {
                                         {level}
                                     </span>
                                 </div>
-                                <h3 className="font-bold text-text text-lg mb-1">{info.label}</h3>
+                                <h3 className="font-bold text-text text-lg mb-1">JLPT {level}</h3>
                                 <p className="text-xs text-text-muted mb-3">{info.desc}</p>
                                 <div className="flex items-center gap-1.5 text-xs text-text-light">
                                     <Clock className="size-3.5" />

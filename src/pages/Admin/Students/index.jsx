@@ -76,7 +76,9 @@ export default function AdminStudentsPage() {
         try {
             await adminService.toggleUserStatus(userId)
             load()
-        } catch {}
+        } catch {
+            /* silent */
+        }
         setActionMenu(null)
     }
 
@@ -84,7 +86,9 @@ export default function AdminStudentsPage() {
         try {
             await adminService.updateUserRole(userId, role)
             load()
-        } catch {}
+        } catch {
+            /* silent */
+        }
         setActionMenu(null)
     }
 
@@ -93,7 +97,9 @@ export default function AdminStudentsPage() {
         try {
             await adminService.deleteUser(userId)
             load()
-        } catch {}
+        } catch {
+            /* silent */
+        }
         setActionMenu(null)
     }
 

@@ -8,7 +8,7 @@ import {
     ChevronDown,
     ChevronUp,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 const SECTION_NAME = {
     vocabulary: 'Từ vựng',
@@ -37,11 +37,7 @@ export default function BookmarksPage() {
     const [expandedId, setExpandedId] = useState(null)
     const [total, setTotal] = useState(0)
 
-    useEffect(() => {
-        loadBookmarks()
-    }, [sectionType])
-
-    const loadBookmarks = async () => {
+    const loadBookmarks = useCallback(async () => {
         try {
             setLoading(true)
             const res = await bookmarkService.getMyBookmarks({ sectionType, limit: 50 })
@@ -52,7 +48,11 @@ export default function BookmarksPage() {
         } finally {
             setLoading(false)
         }
-    }
+    }, [sectionType])
+
+    useEffect(() => {
+        loadBookmarks()
+    }, [loadBookmarks])
 
     const removeBookmark = async item => {
         try {

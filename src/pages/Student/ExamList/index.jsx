@@ -10,14 +10,6 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 
 const VALID_LEVELS = JLPT_LEVELS.map(l => l.toUpperCase())
 
-const LEVEL_LABEL = {
-    N5: 'Sơ cấp',
-    N4: 'Sơ trung cấp',
-    N3: 'Trung cấp',
-    N2: 'Trung cao cấp',
-    N1: 'Cao cấp',
-}
-
 export default function ExamListPage() {
     const { level } = useParams()
     const upperLevel = level?.toUpperCase()
@@ -88,7 +80,7 @@ export default function ExamListPage() {
                                 Đề thi JLPT {upperLevel}
                             </h1>
                             <p className="text-sm text-text-light mt-0.5">
-                                {LEVEL_LABEL[upperLevel]} · {exams.length} đề thi có sẵn
+                                {exams.length} đề thi có sẵn
                             </p>
                         </div>
                     </div>

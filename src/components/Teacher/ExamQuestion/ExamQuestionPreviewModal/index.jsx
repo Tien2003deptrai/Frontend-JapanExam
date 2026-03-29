@@ -94,6 +94,7 @@ export default function ExamQuestionPreviewModal({
                 level: examLevel,
                 sectionType,
                 context: blockContext?.text || '',
+                questionId: q._id,
             })
             const data = res?.data || res
             setLocalQuestion(prev => ({

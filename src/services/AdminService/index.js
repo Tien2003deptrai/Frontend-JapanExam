@@ -7,7 +7,13 @@ class AdminService {
     }
 
     /** GET /admin/users — paginated, filterable */
-    getUsers({ page = 1, limit = 20, role, status, search } = {}) {
+    getUsers({
+        page = 1,
+        limit = 20,
+        role = undefined,
+        status = undefined,
+        search = undefined,
+    } = {}) {
         return axiosInstance.post('/admin/users', { page, limit, role, status, search })
     }
 

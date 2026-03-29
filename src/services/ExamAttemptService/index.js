@@ -105,7 +105,7 @@ class ExamAttemptService {
      * Leaderboard
      * POST /exam-attempts/leaderboard
      */
-    async getLeaderboard({ period, level, limit } = {}) {
+    async getLeaderboard({ period = undefined, level = undefined, limit = undefined } = {}) {
         const response = await this.api.post('/exam-attempts/leaderboard', { period, level, limit })
         return response.data
     }
