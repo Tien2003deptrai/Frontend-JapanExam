@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils'
 import { questionBlockService } from '@/services/QuestionBlockService'
 import { Layers, X } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
@@ -77,22 +76,10 @@ export default function EditBlockModal({ isOpen, onClose, blockId, onSuccess }) 
 
     return createPortal(
         <div
-            className={cn(
-                'fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:p-6 transition-[background-color] duration-150',
-                animateIn ? 'bg-black/30' : 'bg-transparent'
-            )}
+            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:p-6 bg-black/30"
             onClick={e => e.target === e.currentTarget && onClose?.()}
         >
-            <div
-                className={cn(
-                    'relative my-4 w-full max-w-5xl rounded-2xl border-[3px] border-white/70 bg-[#F8FAFC] transition-[opacity,transform] duration-150 will-change-[opacity,transform]',
-                    animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
-                )}
-                style={{
-                    boxShadow:
-                        '8px 8px 24px rgba(0,0,0,0.08), -4px -4px 12px rgba(255,255,255,0.6), inset 0 2px 0 rgba(255,255,255,0.5)',
-                }}
-            >
+            <div className="relative my-4 w-full max-w-5xl rounded-2xl border border-gray-200 bg-[#F8FAFC] shadow-xl">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b-2 border-[#E2E8F0] bg-white/80 px-5 py-3.5 rounded-t-2xl">
                     <div className="flex items-center gap-2.5">

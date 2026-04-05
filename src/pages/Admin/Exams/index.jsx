@@ -1,4 +1,4 @@
-﻿import { LoadingSpinner } from '@/components/ui'
+﻿import { ConfirmDialog, LoadingSpinner } from '@/components/ui'
 import { examService } from '@/services/ExamService'
 import {
     BookOpen,
@@ -51,6 +51,7 @@ export default function AdminExamsPage() {
     const [statusFilter, setStatusFilter] = useState('')
     const [loading, setLoading] = useState(true)
     const [actionMenu, setActionMenu] = useState(null)
+    const [confirmDelete, setConfirmDelete] = useState(null)
     const menuRef = useRef(null)
     const navigate = useNavigate()
 
@@ -94,27 +95,37 @@ export default function AdminExamsPage() {
         setActionMenu(null)
     }
 
-    const handleDelete = async examId => {
-        if (!confirm('Xác nhận xóa đề thi này?')) return
+    const handleDelete = examId => {
+        setConfirmDelete(examId)
+        setActionMenu(null)
+    }
+
+    const executeDelete = async () => {
         try {
-            await examService.deleteExam(examId)
+            await examService.deleteExam(confirmDelete)
             load()
         } catch {}
-        setActionMenu(null)
+        setConfirmDelete(null)
     }
 
     const start = (page - 1) * PAGE_SIZE
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h1 className="font-heading text-2xl font-bold text-text">Quản lý Đề thi</h1>
-                    <p className="mt-1 text-sm text-text-light">Tất cả đề thi trong hệ thống.</p>
+            <div className="sticky top-0 z-20 bg-white -mx-6 -mt-6 px-6 pt-6 pb-4 border-b border-gray-100 shadow-sm">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 className="font-heading text-2xl font-bold text-text">
+                            Quản lý Đề thi
+                        </h1>
+                        <p className="mt-1 text-sm text-text-light">
+                            Tất cả đề thi trong hệ thống.
+                        </p>
+                    </div>
+                    <span className="text-sm font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full">
+                        {total} đề thi
+                    </span>
                 </div>
-                <span className="text-sm font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full">
-                    {total} đề thi
-                </span>
             </div>
 
             {/* Filters */}
@@ -347,6 +358,16 @@ export default function AdminExamsPage() {
                     )}
                 </div>
             )}
+
+            <ConfirmDialog
+                isOpen={!!confirmDelete}
+                onClose={() => setConfirmDelete(null)}
+                onConfirm={executeDelete}
+                title="Xóa đề thi"
+                message="Bạn có chắc chắn muốn xóa đề thi này? Hành động này không thể hoàn tác."
+                confirmText="Xóa"
+                variant="danger"
+            />
         </div>
     )
 }

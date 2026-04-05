@@ -39,6 +39,18 @@ export function formatDuration(minutes) {
 }
 
 /**
+ * Format total time in seconds to human-readable (e.g. "2h 30ph", "45ph")
+ */
+export function formatTotalTime(seconds) {
+    if (!seconds || seconds <= 0) return '0ph'
+    const minutes = Math.round(seconds / 60)
+    if (minutes < 60) return `${minutes}ph`
+    const h = Math.floor(minutes / 60)
+    const m = minutes % 60
+    return m > 0 ? `${h}h ${m}ph` : `${h}h`
+}
+
+/**
  * Format seconds to "mm:ss"
  */
 export function formatTimer(seconds) {

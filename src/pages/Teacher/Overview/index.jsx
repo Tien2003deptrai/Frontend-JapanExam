@@ -1,6 +1,12 @@
-import { examService, questionBlockService } from '@/services'
+import {
+    examAttemptService,
+    examFeedbackService,
+    examService,
+    questionBlockService,
+} from '@/services'
 import {
     AlertCircle,
+    AlertTriangle,
     BarChart3,
     BookOpen,
     Clock,
@@ -12,6 +18,7 @@ import {
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 export default function OverviewPage() {
     const [loading, setLoading] = useState(true)
@@ -22,14 +29,18 @@ export default function OverviewPage() {
         totalBlocks: 0,
         recentExams: [],
     })
+    const [reports, setReports] = useState([])
+    const [chartData, setChartData] = useState([])
+    const [chartPeriod, setChartPeriod] = useState('week')
 
     useEffect(() => {
         const fetchStats = async () => {
             try {
                 setLoading(true)
-                const [examsRes, blocksRes] = await Promise.all([
+                const [examsRes, blocksRes, reportsRes] = await Promise.all([
                     examService.getExams({ limit: 100 }),
                     questionBlockService.getBlocks({ limit: 1 }),
+                    examFeedbackService.myReports({ limit: 5 }).catch(() => ({ data: [] })),
                 ])
 
                 const exams = examsRes.data || []
@@ -51,6 +62,7 @@ export default function OverviewPage() {
                     totalBlocks,
                     recentExams,
                 })
+                setReports(reportsRes.data || [])
             } catch (err) {
                 setError(err?.response?.data?.message || 'Không thể tải dữ liệu')
             } finally {
@@ -59,6 +71,22 @@ export default function OverviewPage() {
         }
         fetchStats()
     }, [])
+
+    useEffect(() => {
+        const loadChart = async () => {
+            try {
+                const res = await examAttemptService.getCreatorAttemptChart({
+                    period: chartPeriod,
+                    count: 12,
+                })
+                const raw = res.data || []
+                setChartData(raw.map(d => ({ label: d._id, 'Lượt thi': d.count })))
+            } catch {
+                setChartData([])
+            }
+        }
+        loadChart()
+    }, [chartPeriod])
 
     if (loading) {
         return (
@@ -91,7 +119,7 @@ export default function OverviewPage() {
             icon: Layers,
             gradient: 'from-cta to-green-600',
             link: '/creator/question',
-            suffix: 'blocks',
+            suffix: 'nhóm',
         },
         {
             label: 'Cấp độ phổ biến nhất',
@@ -145,6 +173,56 @@ export default function OverviewPage() {
                         </div>
                     )
                 })}
+            </div>
+
+            {/* Attempt chart */}
+            <div className="bg-white rounded-xl border-2 border-border p-5 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm font-bold text-text flex items-center gap-2">
+                        <TrendingUp className="size-4 text-primary" /> Lượt thi theo{' '}
+                        {chartPeriod === 'week' ? 'tuần' : 'tháng'}
+                    </h3>
+                    <div className="flex gap-1 rounded-lg bg-surface p-1">
+                        {[
+                            { key: 'week', label: 'Tuần' },
+                            { key: 'month', label: 'Tháng' },
+                        ].map(opt => (
+                            <button
+                                key={opt.key}
+                                onClick={() => setChartPeriod(opt.key)}
+                                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer ${
+                                    chartPeriod === opt.key
+                                        ? 'bg-white text-primary shadow-sm'
+                                        : 'text-text-muted hover:text-text'
+                                }`}
+                            >
+                                {opt.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                {chartData.length === 0 ? (
+                    <p className="text-sm text-text-muted py-8 text-center">Chưa có dữ liệu.</p>
+                ) : (
+                    <ResponsiveContainer width="100%" height={260}>
+                        <BarChart
+                            data={chartData}
+                            margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                            <XAxis dataKey="label" tick={{ fontSize: 11 }} stroke="#9CA3AF" />
+                            <YAxis allowDecimals={false} tick={{ fontSize: 11 }} stroke="#9CA3AF" />
+                            <Tooltip
+                                contentStyle={{
+                                    borderRadius: 12,
+                                    border: '1px solid #E5E7EB',
+                                    fontSize: 13,
+                                }}
+                            />
+                            <Bar dataKey="Lượt thi" fill="#0891B2" radius={[6, 6, 0, 0]} />
+                        </BarChart>
+                    </ResponsiveContainer>
+                )}
             </div>
 
             {/* Two-column cards */}
@@ -233,6 +311,59 @@ export default function OverviewPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Reports section */}
+            {reports.length > 0 && (
+                <div className="bg-white rounded-xl border-2 border-border p-5 shadow-sm">
+                    <h3 className="text-sm font-bold text-text flex items-center gap-2 mb-4">
+                        <AlertTriangle className="size-4 text-amber-500" />
+                        Báo lỗi từ người dùng
+                        <span className="ml-auto text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
+                            {reports.length} báo lỗi
+                        </span>
+                    </h3>
+                    <div className="space-y-3">
+                        {reports.map(report => {
+                            const CATEGORY_LABELS = {
+                                wrong_answer: 'Đáp án sai',
+                                duplicate_question: 'Câu hỏi trùng',
+                                broken_media: 'Media lỗi',
+                                unclear_question: 'Câu hỏi không rõ',
+                                other: 'Khác',
+                            }
+                            return (
+                                <div
+                                    key={report._id}
+                                    className="flex items-start gap-3 p-3 rounded-xl border border-border hover:bg-surface/50 transition-colors"
+                                >
+                                    <div className="shrink-0 size-8 rounded-full bg-amber-100 flex items-center justify-center mt-0.5">
+                                        <AlertTriangle className="size-4 text-amber-600" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 mb-0.5">
+                                            <span className="text-xs font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">
+                                                {CATEGORY_LABELS[report.reportCategory] ||
+                                                    report.reportCategory}
+                                            </span>
+                                            <span className="text-xs text-text-muted">
+                                                {report.exam?.title || 'Đề thi'}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-text line-clamp-2">
+                                            {report.content}
+                                        </p>
+                                        <p className="text-xs text-text-muted mt-1">
+                                            {report.user?.fullName || report.guestName || 'Ẩn danh'}{' '}
+                                            ·{' '}
+                                            {new Date(report.createdAt).toLocaleDateString('vi-VN')}
+                                        </p>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
+            )}
 
             {/* Quick actions */}
             <div className="bg-white rounded-xl border-2 border-border p-5 shadow-sm">

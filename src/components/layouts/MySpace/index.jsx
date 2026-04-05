@@ -4,7 +4,7 @@ const MySpace = ({ children }) => {
 
 const Heading = ({ children, className = '', ...props }) => {
     return (
-        <div className={`${className}`} {...props}>
+        <div className={`sticky top-0 z-20 ${className}`} {...props}>
             {children}
         </div>
     )
@@ -12,7 +12,7 @@ const Heading = ({ children, className = '', ...props }) => {
 
 const Body = ({ children, className = '', ...props }) => {
     return (
-        <div className={`flex-1 bg-[#f6f6f6] p-5 ${className}`} {...props}>
+        <div className={`flex-1 bg-[#f6f6f6] p-5 overflow-y-auto ${className}`} {...props}>
             {children}
         </div>
     )

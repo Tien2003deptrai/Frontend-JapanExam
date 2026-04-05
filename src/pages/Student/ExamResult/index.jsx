@@ -1,5 +1,5 @@
 import ExamFeedbackPanel from '@/components/Student/ExamFeedback'
-import { Badge, ErrorState, LoadingPage } from '@/components/ui'
+import { Badge, ErrorState, LoadingPage, Modal } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { bookmarkService, examAttemptService } from '@/services'
 import useAuthStore from '@/stores/authStore'
@@ -9,6 +9,7 @@ import {
     CheckCircle2,
     ChevronRight,
     Eye,
+    MessageSquareText,
     RotateCcw,
     XCircle,
 } from 'lucide-react'
@@ -45,6 +46,7 @@ export default function ExamResultPage() {
     const [filterSection, setFilterSection] = useState('all')
     const [filterStatus, setFilterStatus] = useState('all')
     const [bookmarkedIds, setBookmarkedIds] = useState(new Set())
+    const [feedbackOpen, setFeedbackOpen] = useState(false)
 
     useEffect(() => {
         const loadResult = async () => {
@@ -408,7 +410,21 @@ export default function ExamResultPage() {
                 )}
 
                 {/* Feedback / Comment / Report */}
-                <ExamFeedbackPanel examId={examId} />
+                <button
+                    onClick={() => setFeedbackOpen(true)}
+                    className="w-full inline-flex items-center justify-center gap-2 h-11 px-4 text-sm font-semibold text-primary bg-primary/10 border-2 border-primary/20 rounded-xl hover:bg-primary/20 transition-colors cursor-pointer"
+                >
+                    <MessageSquareText className="size-4" />
+                    Thảo luận & Đánh giá
+                </button>
+                <Modal
+                    isOpen={feedbackOpen}
+                    onClose={() => setFeedbackOpen(false)}
+                    title="Thảo luận & Đánh giá"
+                    className="max-w-4xl max-h-[85vh] flex flex-col"
+                >
+                    <ExamFeedbackPanel examId={examId} />
+                </Modal>
             </div>
         </div>
     )

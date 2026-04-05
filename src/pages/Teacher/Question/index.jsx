@@ -22,6 +22,7 @@ export default function QuestionPage() {
     const [activeTab, setActiveTab] = useState('all')
     const [searchValue, setSearchValue] = useState('')
     const [debouncedSearch, setDebouncedSearch] = useState('')
+    const [sortBy, setSortBy] = useState('newest')
     const [viewingBlock, setViewingBlock] = useState(null)
     const [editingBlock, setEditingBlock] = useState(null)
 
@@ -46,6 +47,7 @@ export default function QuestionPage() {
                 const body = {
                     page: pageNum,
                     limit: PAGE_LIMIT,
+                    sort: sortBy,
                 }
                 if (activeTab !== 'all') {
                     body.section = activeTab
@@ -72,7 +74,7 @@ export default function QuestionPage() {
                 setLoading(false)
             }
         },
-        [activeTab, debouncedSearch]
+        [activeTab, debouncedSearch, sortBy]
     )
 
     // Refetch when tab or search changes
@@ -157,7 +159,7 @@ export default function QuestionPage() {
         <Fragment>
             <Tabs value={activeTab} onValueChange={handleTabChange} className="">
                 <MySpace>
-                    <MySpace.Heading className="bg-white p-5">
+                    <MySpace.Heading className="bg-white p-5 shadow-sm border-b border-gray-100">
                         <QuestionHeading
                             activeTab={activeTab}
                             onTabChange={handleTabChange}
@@ -168,6 +170,25 @@ export default function QuestionPage() {
                         />
                     </MySpace.Heading>
                     <MySpace.Body>
+                        {/* Controls bar */}
+                        <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+                            <span className="text-sm text-text-light">
+                                Hiển thị <strong className="text-text">{blocks.length}</strong> /{' '}
+                                {total} nhóm câu hỏi
+                            </span>
+                            <select
+                                value={sortBy}
+                                onChange={e => {
+                                    setSortBy(e.target.value)
+                                    setPage(1)
+                                }}
+                                className="h-9 px-3 pr-8 text-xs font-medium rounded-lg border border-border bg-white text-text cursor-pointer"
+                            >
+                                <option value="newest">Mới nhất</option>
+                                <option value="oldest">Cũ nhất</option>
+                            </select>
+                        </div>
+
                         <TabsContent value={activeTab} className="mt-0 w-full outline-none">
                             {/* Loading state (first load) */}
                             {loading && blocks.length === 0 && (

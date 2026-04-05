@@ -1,4 +1,5 @@
 import { Badge, ErrorState, LoadingPage } from '@/components/ui'
+import HighlightableText from '@/components/ui/HighlightableText'
 import { bookmarkService, examAttemptService } from '@/services'
 import useAuthStore from '@/stores/authStore'
 import { BookOpen, Send } from 'lucide-react'
@@ -418,9 +419,10 @@ export default function ExamTakePage() {
                                                     className="rounded-xl border-2 border-border/40 bg-linear-to-b from-primary/2 to-transparent p-4 space-y-4"
                                                 >
                                                     <div className="rounded-lg bg-background border border-border/50 p-3">
-                                                        <p className="text-xs text-text-light whitespace-pre-line">
-                                                            {g.context.text}
-                                                        </p>
+                                                        <HighlightableText
+                                                            text={g.context.text}
+                                                            className="text-xs text-text-light"
+                                                        />
                                                     </div>
                                                     {groupItems}
                                                 </div>

@@ -122,7 +122,7 @@ export default function StepPreview({ metadata, sections, totalQuestions }) {
                                             {sc?.name || section.sectionType}
                                         </p>
                                         <p className="text-xs text-[#94A3B8]">
-                                            {section.blocks.length} blocks · {qCount} câu ·{' '}
+                                            {section.blocks.length} nhóm · {qCount} câu ·{' '}
                                             {section.duration} phút
                                         </p>
                                     </div>
@@ -192,7 +192,7 @@ function PreviewBlock({ block, blockIdx, sectionColor }) {
     const qCount = getBlockQuestionCount(block)
     const isBankBlock = !!(block.blockId || block._bankBlockId)
 
-    // Smart title: skip "Block #xxx" patterns
+    // Smart title: skip "Nhóm #xxx" patterns
     const displayTitle = (() => {
         if (block.title && !block.title.startsWith('Block #')) return block.title
         if (block._preview?.context?.text)

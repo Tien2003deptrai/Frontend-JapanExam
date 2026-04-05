@@ -56,6 +56,14 @@ class ExamFeedbackService {
         const res = await this.api.post('/exam-feedbacks/delete', { feedbackId })
         return res.data
     }
+
+    /**
+     * List reports on my exams (creator).
+     */
+    async myReports({ page = 1, limit = 20 } = {}) {
+        const res = await this.api.post('/exam-feedbacks/my-reports', { page, limit })
+        return res.data
+    }
 }
 
 export const examFeedbackService = new ExamFeedbackService()

@@ -1,7 +1,14 @@
 import ExamFeedbackPanel from '@/components/Student/ExamFeedback'
+import { Modal } from '@/components/ui'
 import Button from '@/components/ui/Button'
-import Input from '@/components/ui/Input'
 import { LoadingPage } from '@/components/ui/Loading'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
 import { ErrorState } from '@/components/ui/States'
 import { cn } from '@/lib/utils'
 import { examAttemptService } from '@/services'
@@ -11,6 +18,7 @@ import {
     BookOpen,
     ChevronRight,
     Clock,
+    MessageSquareText,
     PlayCircle,
     Shield,
     Target,
@@ -35,6 +43,7 @@ export default function ExamDetailPage() {
     const [mode, setMode] = useState(/** @type {'full_test'|'practice'} */ ('full_test'))
     const [selectedSections, setSelectedSections] = useState([])
     const [practiceMinutes, setPracticeMinutes] = useState('')
+    const [feedbackOpen, setFeedbackOpen] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -311,16 +320,29 @@ export default function ExamDetailPage() {
                                     })}
                                 </div>
                             </div>
-                            <Input
-                                label="Thời gian (phút, bỏ trống = không giới hạn)"
-                                type="number"
-                                min="1"
-                                max="300"
-                                value={practiceMinutes}
-                                onChange={e => setPracticeMinutes(e.target.value)}
-                                placeholder="Ví dụ: 30"
-                                className="w-40"
-                            />
+                            <div className="space-y-1.5">
+                                <label className="text-sm font-semibold text-[#1E293B]">
+                                    Thời gian (phút, bỏ trống = không giới hạn)
+                                </label>
+                                <Select
+                                    value={practiceMinutes}
+                                    onValueChange={v => setPracticeMinutes(v)}
+                                >
+                                    <SelectTrigger className="h-10 rounded-lg border-2 border-[#E2E8F0] w-40">
+                                        <SelectValue placeholder="Chọn thời gian" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="">Không giới hạn</SelectItem>
+                                        {Array.from({ length: 20 }, (_, i) => (i + 1) * 15).map(
+                                            minutes => (
+                                                <SelectItem key={minutes} value={String(minutes)}>
+                                                    {minutes} phút
+                                                </SelectItem>
+                                            )
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -371,7 +393,21 @@ export default function ExamDetailPage() {
                 </Button>
 
                 {/* Feedback / Comment / Report */}
-                <ExamFeedbackPanel examId={examId} />
+                <button
+                    onClick={() => setFeedbackOpen(true)}
+                    className="w-full inline-flex items-center justify-center gap-2 h-11 px-4 text-sm font-semibold text-primary bg-primary/10 border-2 border-primary/20 rounded-xl hover:bg-primary/20 transition-colors cursor-pointer"
+                >
+                    <MessageSquareText className="size-4" />
+                    Thảo luận & Đánh giá
+                </button>
+                <Modal
+                    isOpen={feedbackOpen}
+                    onClose={() => setFeedbackOpen(false)}
+                    title="Thảo luận & Đánh giá"
+                    className="max-w-4xl max-h-[85vh] flex flex-col"
+                >
+                    <ExamFeedbackPanel examId={examId} />
+                </Modal>
             </div>
         </div>
     )

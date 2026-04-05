@@ -31,6 +31,11 @@ class AdminService {
     deleteUser(userId) {
         return axiosInstance.post('/admin/users/delete', { userId })
     }
+
+    /** Thống kê lượt thi theo tuần/tháng (toàn hệ thống) */
+    getAttemptChart({ period = 'week', count = 12 } = {}) {
+        return axiosInstance.post('/admin/attempt-chart', { period, count })
+    }
 }
 
 export const adminService = new AdminService()

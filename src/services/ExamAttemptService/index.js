@@ -118,6 +118,27 @@ class ExamAttemptService {
         const response = await this.api.post('/exam-attempts/recommendations')
         return response.data
     }
+
+    /**
+     * Thống kê lượt thi theo tuần/tháng (cho creator)
+     * POST /exam-attempts/creator-attempt-chart
+     */
+    async getCreatorAttemptChart({ period = 'week', count = 12 } = {}) {
+        const response = await this.api.post('/exam-attempts/creator-attempt-chart', {
+            period,
+            count,
+        })
+        return response.data
+    }
+
+    /**
+     * Lấy danh sách bài thi đang làm dở
+     * POST /exam-attempts/active
+     */
+    async getActiveAttempts() {
+        const response = await this.api.post('/exam-attempts/active')
+        return response.data
+    }
 }
 
 export const examAttemptService = new ExamAttemptService()

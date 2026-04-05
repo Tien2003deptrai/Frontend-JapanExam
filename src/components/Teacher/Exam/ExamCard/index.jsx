@@ -23,18 +23,13 @@ export default function ExamCard({ data, children, className }) {
                 className
             )}
         >
-            {/* Level badge + exam code */}
+            {/* Level badge */}
             <div className="flex items-center justify-between mb-3">
                 <span
                     className={`inline-flex items-center justify-center h-7 px-2.5 rounded-lg text-xs font-bold ${colors.bg || 'bg-primary/10'} ${colors.text || 'text-primary'}`}
                 >
                     {data.level}
                 </span>
-                {data.examCode && (
-                    <span className="font-mono text-[10px] text-text-muted bg-surface px-2 py-0.5 rounded">
-                        {data.examCode}
-                    </span>
-                )}
             </div>
 
             {/* Title */}

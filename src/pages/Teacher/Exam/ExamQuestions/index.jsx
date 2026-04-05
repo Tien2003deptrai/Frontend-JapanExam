@@ -3,6 +3,7 @@ import EditExamMetadataModal from '@/components/Teacher/Exam/EditExamMetadataMod
 import AddQuestionToExamModal from '@/components/Teacher/ExamQuestion/AddQuestionToExamModal'
 import EditExamQuestionModal from '@/components/Teacher/ExamQuestion/EditExamQuestionModal'
 import ExamQuestionPreviewModal from '@/components/Teacher/ExamQuestion/ExamQuestionPreviewModal'
+import { ConfirmDialog, Modal } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { examService } from '@/services'
 import {
@@ -58,6 +59,7 @@ export default function ExamQuestionsPage() {
 
     // Section expand state
     const [expandedSections, setExpandedSections] = useState({})
+    const [confirmAction, setConfirmAction] = useState(null)
 
     const { examId } = useParams()
     const navigate = useNavigate()
@@ -106,30 +108,38 @@ export default function ExamQuestionsPage() {
     }
 
     // Remove block from exam
-    const handleRemoveBlock = async (sectionIndex, blockIndex) => {
-        if (!window.confirm('Bạn có chắc chắn muốn xóa block câu hỏi này?')) return
-        try {
-            const res = await examService.removeBlockFromExam({ examId, sectionIndex, blockIndex })
-            if (res.success) setExam(res.data.exam)
-        } catch (err) {
-            alert('Có lỗi xảy ra khi xóa block')
-        }
+    const handleRemoveBlock = (sectionIndex, blockIndex) => {
+        setConfirmAction({
+            title: 'Xóa nhóm câu hỏi',
+            message: 'Bạn có chắc chắn muốn xóa nhóm câu hỏi này khỏi đề thi?',
+            confirmText: 'Xóa',
+            action: async () => {
+                const res = await examService.removeBlockFromExam({
+                    examId,
+                    sectionIndex,
+                    blockIndex,
+                })
+                if (res.success) setExam(res.data.exam)
+            },
+        })
     }
 
     // Remove question from exam
-    const handleRemoveQuestion = async (sectionIndex, blockIndex, questionIndex) => {
-        if (!window.confirm('Bạn có chắc chắn muốn xóa câu hỏi này?')) return
-        try {
-            const res = await examService.removeQuestionFromExam({
-                examId,
-                sectionIndex,
-                blockIndex,
-                questionIndex,
-            })
-            if (res.success) setExam(res.data.exam)
-        } catch (err) {
-            alert('Có lỗi xảy ra khi xóa câu hỏi')
-        }
+    const handleRemoveQuestion = (sectionIndex, blockIndex, questionIndex) => {
+        setConfirmAction({
+            title: 'Xóa câu hỏi',
+            message: 'Bạn có chắc chắn muốn xóa câu hỏi này khỏi đề thi?',
+            confirmText: 'Xóa',
+            action: async () => {
+                const res = await examService.removeQuestionFromExam({
+                    examId,
+                    sectionIndex,
+                    blockIndex,
+                    questionIndex,
+                })
+                if (res.success) setExam(res.data.exam)
+            },
+        })
     }
 
     // Handle question click → open preview modal
@@ -357,8 +367,8 @@ export default function ExamQuestionsPage() {
                                             {section.sectionName || sc.name}
                                         </h3>
                                         <p className="text-xs text-text-muted mt-0.5">
-                                            {section.blocks?.length || 0} blocks · {sectionQCount}{' '}
-                                            câu · {section.duration} phút
+                                            {section.blocks?.length || 0} nhóm · {sectionQCount} câu
+                                            · {section.duration} phút
                                         </p>
                                     </div>
                                 </div>
@@ -435,7 +445,7 @@ export default function ExamQuestionsPage() {
                                                         <span className="text-sm font-semibold text-text truncate">
                                                             {block.title ||
                                                                 block.questionType ||
-                                                                `Block ${bIdx + 1}`}
+                                                                `Nhóm ${bIdx + 1}`}
                                                         </span>
                                                         <span className="text-[10px] text-text-muted shrink-0">
                                                             {block.questions?.length || 0} câu
@@ -452,7 +462,7 @@ export default function ExamQuestionsPage() {
                                                             handleRemoveBlock(sIdx, bIdx)
                                                         }
                                                         className="p-1.5 rounded-lg text-text-muted hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
-                                                        title="Xóa block"
+                                                        title="Xóa nhóm câu hỏi"
                                                     >
                                                         <Trash2 className="size-3.5" />
                                                     </button>
@@ -528,12 +538,15 @@ export default function ExamQuestionsPage() {
                 )}
             </div>
 
-            {/* ── Thảo luận & Đánh giá ── */}
-            {feedbackOpen && (
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-                    <ExamFeedbackPanel examId={examId} />
-                </div>
-            )}
+            {/* ── Thảo luận & Đánh giá (Modal) ── */}
+            <Modal
+                isOpen={feedbackOpen}
+                onClose={() => setFeedbackOpen(false)}
+                title="Thảo luận & Đánh giá"
+                className="max-w-4xl max-h-[85vh] flex flex-col"
+            >
+                <ExamFeedbackPanel examId={examId} />
+            </Modal>
 
             {/* ── Modals ── */}
 
@@ -589,6 +602,20 @@ export default function ExamQuestionsPage() {
                 questionIndex={editQuestion?.questionIndex}
                 questionData={editQuestion?.questionData}
                 onSuccess={fetchExam}
+            />
+
+            {/* Generic confirm dialog for block/question removal */}
+            <ConfirmDialog
+                isOpen={!!confirmAction}
+                onClose={() => setConfirmAction(null)}
+                onConfirm={async () => {
+                    await confirmAction?.action?.()
+                    setConfirmAction(null)
+                }}
+                title={confirmAction?.title}
+                message={confirmAction?.message}
+                confirmText={confirmAction?.confirmText}
+                variant="danger"
             />
         </div>
     )
