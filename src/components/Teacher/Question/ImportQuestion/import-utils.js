@@ -266,8 +266,14 @@ function rowsToItem(rows) {
 
 export async function parseWord(file) {
     const buffer = await file.arrayBuffer()
-    const result = await mammoth.extractRawText({ arrayBuffer: buffer })
-    const text = result.value
+    let text
+    try {
+        const result = await mammoth.extractRawText({ arrayBuffer: buffer })
+        text = result.value
+    } catch {
+        // Fallback: file may be plain text saved with .docx extension
+        text = new TextDecoder('utf-8').decode(buffer)
+    }
 
     const lines = text
         .split('\n')

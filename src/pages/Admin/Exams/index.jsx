@@ -12,6 +12,7 @@ import {
     Trash2,
 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 
 const PAGE_SIZE = 15
@@ -51,6 +52,7 @@ export default function AdminExamsPage() {
     const [statusFilter, setStatusFilter] = useState('')
     const [loading, setLoading] = useState(true)
     const [actionMenu, setActionMenu] = useState(null)
+    const [menuPos, setMenuPos] = useState(null)
     const [confirmDelete, setConfirmDelete] = useState(null)
     const menuRef = useRef(null)
     const navigate = useNavigate()
@@ -81,7 +83,10 @@ export default function AdminExamsPage() {
 
     useEffect(() => {
         const h = e => {
-            if (menuRef.current && !menuRef.current.contains(e.target)) setActionMenu(null)
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
+                setActionMenu(null)
+                setMenuPos(null)
+            }
         }
         document.addEventListener('mousedown', h)
         return () => document.removeEventListener('mousedown', h)
@@ -111,8 +116,8 @@ export default function AdminExamsPage() {
     const start = (page - 1) * PAGE_SIZE
 
     return (
-        <div className="space-y-6">
-            <div className="sticky top-0 z-20 bg-white -mx-6 -mt-6 px-6 pt-6 pb-4 border-b border-gray-100 shadow-sm">
+        <div className="space-y-6 p-4 lg:p-6">
+            <div className="sticky top-0 z-20 bg-white -mx-4 -mt-4 px-4 pt-4 lg:-mx-6 lg:-mt-6 lg:px-6 lg:pt-6 pb-4 border-b border-gray-100 shadow-sm">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="font-heading text-2xl font-bold text-text">
@@ -270,57 +275,42 @@ export default function AdminExamsPage() {
                                                 <td className="px-5 py-3 text-text-muted">
                                                     {formatDate(ex.createdAt)}
                                                 </td>
-                                                <td className="px-5 py-3 relative">
+                                                <td className="px-5 py-3">
                                                     <button
-                                                        onClick={() =>
-                                                            setActionMenu(
-                                                                actionMenu === ex._id
-                                                                    ? null
-                                                                    : ex._id
-                                                            )
-                                                        }
+                                                        onClick={e => {
+                                                            if (actionMenu === ex._id) {
+                                                                setActionMenu(null)
+                                                                setMenuPos(null)
+                                                            } else {
+                                                                const r =
+                                                                    e.currentTarget.getBoundingClientRect()
+                                                                const spaceBelow =
+                                                                    window.innerHeight - r.bottom
+                                                                setMenuPos(
+                                                                    spaceBelow < 200
+                                                                        ? {
+                                                                              bottom:
+                                                                                  window.innerHeight -
+                                                                                  r.top +
+                                                                                  4,
+                                                                              right:
+                                                                                  window.innerWidth -
+                                                                                  r.right,
+                                                                          }
+                                                                        : {
+                                                                              top: r.bottom + 4,
+                                                                              right:
+                                                                                  window.innerWidth -
+                                                                                  r.right,
+                                                                          }
+                                                                )
+                                                                setActionMenu(ex._id)
+                                                            }
+                                                        }}
                                                         className="p-1.5 rounded-lg hover:bg-surface transition cursor-pointer"
                                                     >
                                                         <MoreHorizontal className="size-4 text-text-muted" />
                                                     </button>
-                                                    {actionMenu === ex._id && (
-                                                        <div
-                                                            ref={menuRef}
-                                                            className="absolute right-5 top-10 z-50 w-48 bg-white rounded-xl border border-border shadow-lg py-1"
-                                                        >
-                                                            <button
-                                                                onClick={() => {
-                                                                    navigate(
-                                                                        `/creator/exam/${ex._id}/questions`
-                                                                    )
-                                                                    setActionMenu(null)
-                                                                }}
-                                                                className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-surface transition text-left cursor-pointer"
-                                                            >
-                                                                <Eye className="size-4 text-primary" />
-                                                                Xem chi tiết
-                                                            </button>
-                                                            {ex.status === 'draft' && (
-                                                                <button
-                                                                    onClick={() =>
-                                                                        handlePublish(ex._id)
-                                                                    }
-                                                                    className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-surface transition text-left cursor-pointer"
-                                                                >
-                                                                    <Send className="size-4 text-emerald-600" />
-                                                                    Xuất bản
-                                                                </button>
-                                                            )}
-                                                            <hr className="my-1 border-border" />
-                                                            <button
-                                                                onClick={() => handleDelete(ex._id)}
-                                                                className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-destructive hover:bg-destructive-light transition text-left cursor-pointer"
-                                                            >
-                                                                <Trash2 className="size-4" />
-                                                                Xóa
-                                                            </button>
-                                                        </div>
-                                                    )}
                                                 </td>
                                             </tr>
                                         )
@@ -358,6 +348,45 @@ export default function AdminExamsPage() {
                     )}
                 </div>
             )}
+
+            {actionMenu &&
+                menuPos &&
+                createPortal(
+                    <div
+                        ref={menuRef}
+                        className="fixed z-[9999] w-48 bg-white rounded-xl border border-border shadow-lg py-1"
+                        style={menuPos}
+                    >
+                        <button
+                            onClick={() => {
+                                navigate(`/creator/exam/${actionMenu}/questions`)
+                                setActionMenu(null)
+                            }}
+                            className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-surface transition text-left cursor-pointer"
+                        >
+                            <Eye className="size-4 text-primary" />
+                            Xem chi tiết
+                        </button>
+                        {exams.find(e => e._id === actionMenu)?.status === 'draft' && (
+                            <button
+                                onClick={() => handlePublish(actionMenu)}
+                                className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-surface transition text-left cursor-pointer"
+                            >
+                                <Send className="size-4 text-emerald-600" />
+                                Xuất bản
+                            </button>
+                        )}
+                        <hr className="my-1 border-border" />
+                        <button
+                            onClick={() => handleDelete(actionMenu)}
+                            className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-destructive hover:bg-destructive-light transition text-left cursor-pointer"
+                        >
+                            <Trash2 className="size-4" />
+                            Xóa
+                        </button>
+                    </div>,
+                    document.body
+                )}
 
             <ConfirmDialog
                 isOpen={!!confirmDelete}

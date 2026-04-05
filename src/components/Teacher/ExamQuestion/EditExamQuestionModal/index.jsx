@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
-import { examService } from '@/services'
-import { AlertCircle, Edit3, Loader2, Save, X } from 'lucide-react'
+import { aiService, examService } from '@/services'
+import { AlertCircle, Edit3, Loader2, Save, Sparkles, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -16,9 +16,13 @@ export default function EditExamQuestionModal({
     questionIndex,
     questionData,
     onSuccess,
+    level,
+    sectionType,
+    blockContext,
 }) {
     const [animateIn, setAnimateIn] = useState(false)
     const [saving, setSaving] = useState(false)
+    const [aiLoading, setAiLoading] = useState(false)
     const [errors, setErrors] = useState(/** @type {Record<string, string>} */ ({}))
     const overlayRef = useRef(null)
 
@@ -114,6 +118,34 @@ export default function EditExamQuestionModal({
             ...prev,
             options: prev.options.map((o, i) => (i === index ? { ...o, text: value } : o)),
         }))
+    }
+
+    const handleAiExplain = async () => {
+        if (aiLoading || !form.questionText.trim()) return
+        try {
+            setAiLoading(true)
+            const res = await aiService.generateExplanation({
+                questionText: form.questionText,
+                options: form.options,
+                correctAnswer: form.correctAnswer,
+                level: level || 'N5',
+                sectionType: sectionType || 'vocabulary',
+                context: blockContext || undefined,
+                questionId: undefined,
+            })
+            const data = res.data || res
+            if (data.explanation) {
+                setForm(prev => ({
+                    ...prev,
+                    explanation: data.explanation,
+                    ...(data.translationVi ? { translationVi: data.translationVi } : {}),
+                }))
+            }
+        } catch (err) {
+            console.error('AI explain failed:', err)
+        } finally {
+            setAiLoading(false)
+        }
     }
 
     const handleOverlayClick = e => {
@@ -240,9 +272,23 @@ export default function EditExamQuestionModal({
 
                     {/* Explanation */}
                     <div>
-                        <label className="block text-sm font-bold text-[#1E293B] mb-2">
-                            Giải thích
-                        </label>
+                        <div className="flex items-center justify-between mb-2">
+                            <label className="text-sm font-bold text-[#1E293B]">Giải thích</label>
+                            <button
+                                type="button"
+                                onClick={handleAiExplain}
+                                disabled={aiLoading || !form.questionText.trim()}
+                                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-violet-500 to-indigo-500 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:from-violet-600 hover:to-indigo-600 disabled:opacity-50 transition-all cursor-pointer"
+                                title="Tạo giải thích bằng AI"
+                            >
+                                {aiLoading ? (
+                                    <Loader2 className="size-3.5 animate-spin" />
+                                ) : (
+                                    <Sparkles className="size-3.5" />
+                                )}
+                                {aiLoading ? 'Đang tạo...' : 'AI giải thích'}
+                            </button>
+                        </div>
                         <textarea
                             value={form.explanation}
                             onChange={e =>

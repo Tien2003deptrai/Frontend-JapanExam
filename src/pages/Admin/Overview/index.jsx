@@ -106,7 +106,7 @@ export default function AdminOverviewPage() {
     const { users, exams, questions, attempts, recentAttempts = [] } = stats
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-4 lg:p-6">
             <div>
                 <h1 className="font-heading text-2xl font-bold text-text">Tổng quan hệ thống</h1>
                 <p className="mt-1 text-sm text-text-light">Dữ liệu thống kê thời gian thực.</p>

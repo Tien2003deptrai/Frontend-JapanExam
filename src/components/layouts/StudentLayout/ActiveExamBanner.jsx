@@ -2,7 +2,7 @@ import { examAttemptService } from '@/services'
 import useAuthStore from '@/stores/authStore'
 import { Clock, PlayCircle, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 /**
  * ActiveExamBanner - Displays a notification when user has in-progress exam attempts.
@@ -10,8 +10,12 @@ import { Link } from 'react-router-dom'
  */
 export default function ActiveExamBanner() {
     const { isAuthenticated } = useAuthStore()
+    const location = useLocation()
     const [attempts, setAttempts] = useState([])
     const [dismissed, setDismissed] = useState(false)
+
+    // Hide banner when user is already on the exam take page
+    const isOnExamPage = /\/exam\/[^/]+\/take/.test(location.pathname)
 
     useEffect(() => {
         if (!isAuthenticated) return
@@ -30,7 +34,7 @@ export default function ActiveExamBanner() {
         }
     }, [isAuthenticated])
 
-    if (!attempts.length || dismissed) return null
+    if (!attempts.length || dismissed || isOnExamPage) return null
 
     return (
         <div className="bg-amber-50 border-b border-amber-200">

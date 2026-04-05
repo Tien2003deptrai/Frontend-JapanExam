@@ -159,6 +159,8 @@ export default function ExamQuestionsPage() {
         setEditQuestion({
             ...previewQuestion.location,
             questionData: previewQuestion.question,
+            sectionType: previewQuestion.sectionType,
+            blockContext: previewQuestion.blockContext,
         })
         setPreviewQuestion(null)
     }
@@ -602,6 +604,9 @@ export default function ExamQuestionsPage() {
                 questionIndex={editQuestion?.questionIndex}
                 questionData={editQuestion?.questionData}
                 onSuccess={fetchExam}
+                level={exam?.level}
+                sectionType={editQuestion?.sectionType}
+                blockContext={editQuestion?.blockContext}
             />
 
             {/* Generic confirm dialog for block/question removal */}

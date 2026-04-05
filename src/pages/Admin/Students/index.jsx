@@ -12,6 +12,7 @@ import {
     UserCog,
 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 const PAGE_SIZE = 15
 
@@ -36,6 +37,7 @@ export default function AdminStudentsPage() {
     const [search, setSearch] = useState('')
     const [loading, setLoading] = useState(true)
     const [actionMenu, setActionMenu] = useState(null)
+    const [menuPos, setMenuPos] = useState(null)
     const menuRef = useRef(null)
 
     const totalPages = Math.ceil(total / PAGE_SIZE)
@@ -66,7 +68,10 @@ export default function AdminStudentsPage() {
 
     useEffect(() => {
         const h = e => {
-            if (menuRef.current && !menuRef.current.contains(e.target)) setActionMenu(null)
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
+                setActionMenu(null)
+                setMenuPos(null)
+            }
         }
         document.addEventListener('mousedown', h)
         return () => document.removeEventListener('mousedown', h)
@@ -106,7 +111,7 @@ export default function AdminStudentsPage() {
     const start = (page - 1) * PAGE_SIZE
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-4 lg:p-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="font-heading text-2xl font-bold text-text">Quản lý Người học</h1>
@@ -205,68 +210,42 @@ export default function AdminStudentsPage() {
                                             <td className="px-5 py-3 text-text-muted">
                                                 {formatDate(u.createdAt)}
                                             </td>
-                                            <td className="px-5 py-3 relative">
+                                            <td className="px-5 py-3">
                                                 <button
-                                                    onClick={() =>
-                                                        setActionMenu(
-                                                            actionMenu === u._id ? null : u._id
-                                                        )
-                                                    }
+                                                    onClick={e => {
+                                                        if (actionMenu === u._id) {
+                                                            setActionMenu(null)
+                                                            setMenuPos(null)
+                                                        } else {
+                                                            const r =
+                                                                e.currentTarget.getBoundingClientRect()
+                                                            const spaceBelow =
+                                                                window.innerHeight - r.bottom
+                                                            setMenuPos(
+                                                                spaceBelow < 220
+                                                                    ? {
+                                                                          bottom:
+                                                                              window.innerHeight -
+                                                                              r.top +
+                                                                              4,
+                                                                          right:
+                                                                              window.innerWidth -
+                                                                              r.right,
+                                                                      }
+                                                                    : {
+                                                                          top: r.bottom + 4,
+                                                                          right:
+                                                                              window.innerWidth -
+                                                                              r.right,
+                                                                      }
+                                                            )
+                                                            setActionMenu(u._id)
+                                                        }
+                                                    }}
                                                     className="p-1.5 rounded-lg hover:bg-surface transition cursor-pointer"
                                                 >
                                                     <MoreHorizontal className="size-4 text-text-muted" />
                                                 </button>
-                                                {actionMenu === u._id && (
-                                                    <div
-                                                        ref={menuRef}
-                                                        className="absolute right-5 top-10 z-50 w-48 bg-white rounded-xl border border-border shadow-lg py-1"
-                                                    >
-                                                        <button
-                                                            onClick={() =>
-                                                                handleToggleStatus(u._id)
-                                                            }
-                                                            className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-surface transition text-left cursor-pointer"
-                                                        >
-                                                            {u.status === 'locked' ? (
-                                                                <>
-                                                                    <Unlock className="size-4 text-emerald-600" />
-                                                                    Mở khóa
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <Lock className="size-4 text-amber-600" />
-                                                                    Khóa tài khoản
-                                                                </>
-                                                            )}
-                                                        </button>
-                                                        <button
-                                                            onClick={() =>
-                                                                handleUpdateRole(u._id, 'creator')
-                                                            }
-                                                            className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-surface transition text-left cursor-pointer"
-                                                        >
-                                                            <UserCog className="size-4 text-primary" />
-                                                            Nâng lên Người tạo đề
-                                                        </button>
-                                                        <button
-                                                            onClick={() =>
-                                                                handleUpdateRole(u._id, 'admin')
-                                                            }
-                                                            className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-surface transition text-left cursor-pointer"
-                                                        >
-                                                            <Shield className="size-4 text-violet-600" />
-                                                            Nâng lên Admin
-                                                        </button>
-                                                        <hr className="my-1 border-border" />
-                                                        <button
-                                                            onClick={() => handleDelete(u._id)}
-                                                            className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-destructive hover:bg-destructive-light transition text-left cursor-pointer"
-                                                        >
-                                                            <Trash2 className="size-4" />
-                                                            Xóa
-                                                        </button>
-                                                    </div>
-                                                )}
                                             </td>
                                         </tr>
                                     ))
@@ -303,6 +282,60 @@ export default function AdminStudentsPage() {
                     )}
                 </div>
             )}
+
+            {actionMenu &&
+                menuPos &&
+                (() => {
+                    const u = users.find(x => x._id === actionMenu)
+                    if (!u) return null
+                    return createPortal(
+                        <div
+                            ref={menuRef}
+                            className="fixed z-[9999] w-48 bg-white rounded-xl border border-border shadow-lg py-1"
+                            style={menuPos}
+                        >
+                            <button
+                                onClick={() => handleToggleStatus(u._id)}
+                                className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-surface transition text-left cursor-pointer"
+                            >
+                                {u.status === 'locked' ? (
+                                    <>
+                                        <Unlock className="size-4 text-emerald-600" />
+                                        Mở khóa
+                                    </>
+                                ) : (
+                                    <>
+                                        <Lock className="size-4 text-amber-600" />
+                                        Khóa tài khoản
+                                    </>
+                                )}
+                            </button>
+                            <button
+                                onClick={() => handleUpdateRole(u._id, 'creator')}
+                                className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-surface transition text-left cursor-pointer"
+                            >
+                                <UserCog className="size-4 text-primary" />
+                                Nâng lên Người tạo đề
+                            </button>
+                            <button
+                                onClick={() => handleUpdateRole(u._id, 'admin')}
+                                className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-surface transition text-left cursor-pointer"
+                            >
+                                <Shield className="size-4 text-violet-600" />
+                                Nâng lên Admin
+                            </button>
+                            <hr className="my-1 border-border" />
+                            <button
+                                onClick={() => handleDelete(u._id)}
+                                className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-destructive hover:bg-destructive-light transition text-left cursor-pointer"
+                            >
+                                <Trash2 className="size-4" />
+                                Xóa
+                            </button>
+                        </div>,
+                        document.body
+                    )
+                })()}
         </div>
     )
 }

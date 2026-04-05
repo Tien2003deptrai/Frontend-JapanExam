@@ -51,15 +51,23 @@ const SECTION_TYPE_MAP = {
  */
 export async function parseExamDocx(file, defaultLevel = 'N5') {
     const arrayBuffer = await file.arrayBuffer()
-    const { value: html } = await mammoth.convertToHtml({ arrayBuffer })
-
-    // Extract text lines from HTML
-    const div = document.createElement('div')
-    div.innerHTML = html
-    const lines = div.innerText
-        .split('\n')
-        .map(l => l.trim())
-        .filter(Boolean)
+    let lines
+    try {
+        const { value: html } = await mammoth.convertToHtml({ arrayBuffer })
+        const div = document.createElement('div')
+        div.innerHTML = html
+        lines = div.innerText
+            .split('\n')
+            .map(l => l.trim())
+            .filter(Boolean)
+    } catch {
+        // Fallback: file may be plain text saved with .docx extension
+        const text = new TextDecoder('utf-8').decode(arrayBuffer)
+        lines = text
+            .split('\n')
+            .map(l => l.trim())
+            .filter(Boolean)
+    }
 
     return parseExamLines(lines, defaultLevel)
 }

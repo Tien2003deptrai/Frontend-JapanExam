@@ -12,7 +12,10 @@ const Heading = ({ children, className = '', ...props }) => {
 
 const Body = ({ children, className = '', ...props }) => {
     return (
-        <div className={`flex-1 bg-[#f6f6f6] p-5 overflow-y-auto ${className}`} {...props}>
+        <div
+            className={`flex-1 bg-[#f6f6f6] px-5 pb-5 pt-4 overflow-y-auto ${className}`}
+            {...props}
+        >
             {children}
         </div>
     )

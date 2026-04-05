@@ -180,8 +180,22 @@ export default function ExamTakePage() {
         return () => document.removeEventListener('visibilitychange', handleVisibility)
     }, [mode, submitted])
 
-    // Restore answers for resumed attempt
+    // Restore answers: first from localStorage, then override with server data
     useEffect(() => {
+        const key = attempt?._id ? `exam_answers_${attempt._id}` : null
+        if (key) {
+            try {
+                const saved = localStorage.getItem(key)
+                if (saved) {
+                    const parsed = JSON.parse(saved)
+                    if (parsed && typeof parsed === 'object') {
+                        setAnswers(prev => ({ ...prev, ...parsed }))
+                    }
+                }
+            } catch {
+                /* ignore */
+            }
+        }
         if (attempt?.answers?.length > 0) {
             const restored = {}
             for (const a of attempt.answers) {
@@ -190,6 +204,18 @@ export default function ExamTakePage() {
             setAnswers(prev => ({ ...prev, ...restored }))
         }
     }, [attempt])
+
+    // Persist answers to localStorage on every change
+    useEffect(() => {
+        const key = attempt?._id ? `exam_answers_${attempt._id}` : null
+        if (key && Object.keys(answers).length > 0) {
+            try {
+                localStorage.setItem(key, JSON.stringify(answers))
+            } catch {
+                /* quota exceeded */
+            }
+        }
+    }, [answers, attempt?._id])
 
     const onAnswer = useCallback((qId, value) => {
         setAnswers(prev => ({ ...prev, [qId]: value }))
@@ -213,6 +239,13 @@ export default function ExamTakePage() {
             if (submitting || submitted) return
             setSubmitting(true)
             setShowConfirm(false)
+
+            // Clear saved answers from localStorage
+            if (attempt?._id) {
+                try {
+                    localStorage.removeItem(`exam_answers_${attempt._id}`)
+                } catch {}
+            }
 
             try {
                 const answerArray = Object.entries(answers).map(([questionId, selectedAnswer]) => ({
